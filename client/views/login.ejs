@@ -1,0 +1,16 @@
+<% include partials/header.ejs %>
+
+<script type="text/javascript">
+
+var lock = new Auth0Lock(<%- JSON.stringify(env.auth0Client) %>, <%- JSON.stringify(env.auth0Domain) %>,
+      { auth: {
+        redirectUrl: <%- JSON.stringify(env.authCallback) %>
+      , responseType: 'code'
+      , params: {
+        scope: 'openid name email picture'
+      }
+    }});
+  lock.show();
+</script>
+
+<% include partials/footer.ejs %>

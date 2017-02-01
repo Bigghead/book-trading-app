@@ -17,9 +17,12 @@
   },
   "homepage": "https://github.com/Bigghead/book-trading-app#readme",
   "dependencies": {
+    "auth0-lock": "^10.11.0",
     "body-parser": "^1.16.0",
+    "connect-ensure-login": "^0.1.1",
     "ejs": "^2.5.5",
     "mongoose": "^4.8.1",
-    "passport": "^0.3.2"
+    "passport": "^0.3.2",
+    "passport-auth0": "^0.6.0"
   }
 }

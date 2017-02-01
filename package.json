@@ -1,0 +1,25 @@
+{
+  "name": "book-trading-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bigghead/book-trading-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Bigghead/book-trading-app/issues"
+  },
+  "homepage": "https://github.com/Bigghead/book-trading-app#readme",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "ejs": "^2.5.5",
+    "mongoose": "^4.8.1",
+    "passport": "^0.3.2"
+  }
+}

@@ -12,12 +12,13 @@ var express    = require('express'),
 mongoose.connect(keys.mLab);
 
 //======Model Requires=====
-var Book = require('./server/models/bookSchema.js'),
+var Books = require('./server/models/bookSchema.js'),
     User = require('./server/models/userSchema.js');
 
 app.set('view engine', 'ejs');
 app.set('views',__dirname+'/client/views');
 
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(Session({
   secret: 'This is Sparta Again',
   resave :false,
@@ -47,7 +48,23 @@ var strategy = new Auth0Strategy({
     // accessToken is the token to call Auth0 API (not needed in the most cases)
     // extraParams.id_token has the JSON Web Token
     // profile has all the information from the user
-    return done(null, profile);
+    User.findOne({username: profile.nickname}, function(err, foundUser){
+      if(err){
+        console.log(err);
+      } else if(foundUser === null){
+        User.create({
+          username: profile.nickname
+        }, function(err, madeUser){
+          if(err){
+            console.log(err);
+          } else {
+            return done(null, madeUser);
+          }
+        });
+      } else {
+        return done(null, foundUser);
+      }
+    });
   });
 
 passport.use(strategy);
@@ -70,6 +87,37 @@ app.get('/login',
 app.get('/logout', function(req, res){
   req.logout();
   res.redirect('/');
+});
+
+app.get('/:id/books', function(req, res){
+  var id = req.params.id;
+  User.findById(id).populate('booksOwned').exec(function(err, foundUser){
+    res.render('userBooks', {foundUser : foundUser});
+  });
+});
+
+app.post('/:id/books', function(req, res){
+  Books.create({
+    bookName: req.body.newBook,
+    description: 'Blah Blah',
+    ownedBy: req.params.id
+  }, function(err, madeBook){
+    if(err){
+      console.log(err);
+    } else {
+      User.findById(req.params.id, function(err, foundUser){
+        if(err){
+          console.log(err);
+        } else {
+          foundUser.booksOwned.push(madeBook);
+          foundUser.save();
+          console.log('User: ');
+          console.log(foundUser);
+          res.redirect('/' + req.params.id +'/books');
+        }
+      });
+    }
+  });
 });
 
 // Perform the final stage of authentication and redirect to '/user'

@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 
 var bookSchema = new mongoose.Schema({
   bookName: String,
+  description: String,
   ownedBy: mongoose.Schema.Types.ObjectId
 });
 

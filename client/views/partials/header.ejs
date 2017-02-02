@@ -20,7 +20,8 @@
           <li><a href="/login">Log In</a></li>
           <li><a href="collapsible.html">Register</a></li>
         <%  } else { %>
-          <li><a href="/#a"><%= currentUser.nickname %></a></li>
+          <li><a href="/#a"><%= currentUser.username %></a></li>
+          <li><a href="/<%= currentUser._id %>/books">My Books</a></li>
           <li><a href="/logout">log Out</a></li>
         <%  } %>
 

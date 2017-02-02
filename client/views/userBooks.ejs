@@ -1,0 +1,39 @@
+<% include partials/header.ejs %>
+
+<div class="container center-align">
+  <div class="row">
+    <div class="col l12">
+      <form class="" action="/<%= foundUser._id %>/books" method="post">
+        <input type="text" name="newBook" value="">
+        <button type="submit" class='waves-effect waves-light btn'>Add A New Book</button>
+      </form>
+    </div>
+  </div>
+  <div class="">
+    <h2>All My Books:</h2>
+    <% console.log(foundUser); %>
+    <% if(foundUser.booksOwned.length === 0){ %>
+      <h3>You currently have no books added<h3>
+     <% } else {  %>
+       <table class='highlight'>
+          <th>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </th>
+          <tbody>
+          <% foundUser.booksOwned.forEach(function(book){ %>
+          <%   console.log(book); %>
+            <td><%= book.bookName %></td>
+            <td><%= book.description %></td>
+          <%  });  %>
+        <%  }  %>
+          </tbody>
+
+       </table>
+
+  </div>
+</div>
+
+<% include partials/footer %>

@@ -1,12 +1,13 @@
-var express    = require('express'),
-    mongoose   = require('mongoose'),
-    bodyParser = require('body-parser'),
-    passport   = require('passport'),
-    Auth0Strategy = require('passport-auth0'),
+var express        = require('express'),
+    mongoose       = require('mongoose'),
+    bodyParser     = require('body-parser'),
+    passport       = require('passport'),
+    Auth0Strategy  = require('passport-auth0'),
     ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn(),
-    Session         = require('express-session'),
-    keys       = require('./keys');
-    app        = express();
+    bookSearch     = require('google-books-search'),
+    Session        = require('express-session'),
+    keys           = require('./keys');
+    app            = express();
 
 //=====mongoose connect
 mongoose.connect(keys.mLab);
@@ -14,6 +15,16 @@ mongoose.connect(keys.mLab);
 //======Model Requires=====
 var Books = require('./server/models/bookSchema.js'),
     User = require('./server/models/userSchema.js');
+
+var bookSearchOptions = {
+        key: keys.googleBooksApi,
+        field: 'title',
+        offset: 0,
+        limit: 3,
+        type: 'books',
+        order: 'relevance',
+        lang: 'en'
+    };
 
 app.set('view engine', 'ejs');
 app.set('views',__dirname+'/client/views');
@@ -80,7 +91,7 @@ app.get('/', function(req, res){
 
 app.get('/login',
   function(req, res){
-    res.render('login', { env: keys });
+  res.render('login', {env: keys});
   });
 
 // Perform session logout and redirect to homepage
@@ -89,31 +100,40 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-app.get('/:id/books', function(req, res){
+app.get('/books/:id', function(req, res){
   var id = req.params.id;
   User.findById(id).populate('booksOwned').exec(function(err, foundUser){
     res.render('userBooks', {foundUser : foundUser});
   });
 });
 
-app.post('/:id/books', function(req, res){
-  Books.create({
-    bookName: req.body.newBook,
-    description: 'Blah Blah',
-    ownedBy: req.params.id
-  }, function(err, madeBook){
+app.post('/books/:id', function(req, res){
+
+  bookSearch.search(req.body.newBook, function(err, results){
     if(err){
       console.log(err);
     } else {
-      User.findById(req.params.id, function(err, foundUser){
+
+      Books.create({
+        bookName: req.body.newBook,
+        description: results[0].description.slice(0, 50) + '...',
+        picture: results[0].thumbnail,
+        ownedBy: req.params.id
+      }, function(err, madeBook){
         if(err){
           console.log(err);
         } else {
-          foundUser.booksOwned.push(madeBook);
-          foundUser.save();
-          console.log('User: ');
-          console.log(foundUser);
-          res.redirect('/' + req.params.id +'/books');
+          User.findById(req.params.id, function(err, foundUser){
+            if(err){
+              console.log(err);
+            } else {
+              foundUser.booksOwned.push(madeBook);
+              foundUser.save();
+              console.log('User: ');
+              console.log(foundUser);
+              res.redirect('/books/' + req.params.id);
+            }
+          });
         }
       });
     }

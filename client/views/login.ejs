@@ -10,7 +10,24 @@ var lock = new Auth0Lock(<%- JSON.stringify(env.auth0Client) %>, <%- JSON.string
         scope: 'openid name email picture'
       }
     }});
-  lock.show();
+
+  // Listening for the authenticated event
+lock.on("authenticated", function(authResult) {
+  // Use the token in authResult to getUserInfo() and save it to localStorage
+  lock.getUserInfo(authResult.accessToken, function(error, profile) {
+    if (error) {
+      // Handle error
+      return;
+    }
+
+    localStorage.setItem('accessToken', authResult.accessToken);
+    localStorage.setItem('profile', JSON.stringify(profile));
+    console.log(localStorage);
+  });
+});
+
+lock.show();
+
 </script>
 
 <% include partials/footer.ejs %>

@@ -16,8 +16,14 @@
     <div class="nav-wrapper">
       <a href="#" class="brand-logo">Book Trading</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <li><a href="/login">Log In</a></li>
-        <li><a href="collapsible.html">Register</a></li>
+        <% if(!currentUser){ %>
+          <li><a href="/login">Log In</a></li>
+          <li><a href="collapsible.html">Register</a></li>
+        <%  } else { %>
+          <li><a href="/#a"><%= currentUser.nickname %></a></li>
+          <li><a href="/logout">log Out</a></li>
+        <%  } %>
+
       </ul>
     </div>
   </nav>

@@ -16,19 +16,21 @@
       <h3>You currently have no books added<h3>
      <% } else {  %>
        <table class='highlight'>
-          <th>
+          <thead>
             <tr>
               <th>Image</th>
               <th>Name</th>
               <th>Description</th>
             </tr>
-          </th>
+          </thead>
           <tbody>
           <% foundUser.booksOwned.forEach(function(book){ %>
           <%   console.log(book); %>
-            <td><img src=<%= book.picture %>></td>
-            <td><%= book.bookName %></td>
-            <td><%= book.description %></td>
+            <tr>
+              <td><img src=<%= book.picture %>></td>
+              <td><%= book.bookName %></td>
+              <td><%= book.description %></td
+            </tr>
           <%  });  %>
         <%  }  %>
           </tbody>

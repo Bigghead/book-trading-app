@@ -10,6 +10,7 @@ var express        = require('express'),
     app            = express();
 
 //=====mongoose connect
+mongoose.Promise = global.Promise;
 mongoose.connect(keys.mLab);
 
 //======Model Requires=====
@@ -99,6 +100,18 @@ app.get('/books', function(req, res){
   });
 });
 
+//=========SHOW ONE route ========
+app.get('/books/:bookid', function(req, res){
+  Books.find(req.params.bookid, function(err, foundBook){
+    if(err){
+    console.log(err);
+  } else {
+    console.log(foundBook);
+    res.render('singleBook', { book: foundBook });
+  }
+  });
+});
+
 app.get('/login',
   function(req, res){
   res.render('login', {env: keys});
@@ -110,12 +123,6 @@ app.get('/logout', function(req, res){
   res.redirect('/');
 });
 
-app.get('/books/user/:id', function(req, res){
-  var id = req.params.id;
-  User.findById(id).populate('booksOwned').exec(function(err, foundUser){
-    res.render('userBooks', {foundUser : foundUser});
-  });
-});
 
 app.post('/books/user/:id', function(req, res){
 
@@ -126,7 +133,7 @@ app.post('/books/user/:id', function(req, res){
       console.log(results);
       Books.create({
         bookName: results[0].title,
-        description: results[0].description.slice(0, 50) + '...',
+        description: results[0].description,
         picture: results[0].thumbnail,
         ownedBy: req.params.id
       }, function(err, madeBook){
@@ -139,7 +146,7 @@ app.post('/books/user/:id', function(req, res){
             } else {
               foundUser.booksOwned.push(madeBook);
               foundUser.save();
-              res.redirect('/books/' + req.params.id);
+              res.redirect('/books/user/' + req.params.id);
             }
           });
         }
@@ -148,7 +155,7 @@ app.post('/books/user/:id', function(req, res){
   });
 });
 
-app.get('/books/:userid/:bookid', function(req, res){
+app.get('/books/user/:userid/:bookid', function(req, res){
   User.findById(req.params.userid, function(err, foundUser){
     if(err){
       console.log(err);
@@ -163,6 +170,14 @@ app.get('/books/:userid/:bookid', function(req, res){
         }
       });
     }
+  });
+});
+
+app.get('/books/user/:id', function(req, res){
+  var id = req.params.id;
+  User.findById(id).populate('booksOwned').exec(function(err, foundUser){
+    console.log(foundUser);
+    res.render('userBooks', {foundUser : foundUser});
   });
 });
 

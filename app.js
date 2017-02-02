@@ -8,8 +8,12 @@ var express    = require('express'),
     keys       = require('./keys');
     app        = express();
 
-//mongoose connect
+//=====mongoose connect
 mongoose.connect(keys.mLab);
+
+//======Model Requires=====
+var Book = require('./server/models/bookSchema.js'),
+    User = require('./server/models/userSchema.js');
 
 app.set('view engine', 'ejs');
 app.set('views',__dirname+'/client/views');

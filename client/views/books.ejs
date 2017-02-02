@@ -6,14 +6,23 @@
     <% console.log(currentUser); %>
     <% books.forEach(function(book){ %>
       <div class="col l4 center-align">
-        <h4><%=book.bookName%></h4>
-        <img src=<%= book.picture %> >
-        <% if(currentUser && currentUser.booksOwned.indexOf(book._id.stringify) !== -1){ %>
-          <button>Request A Trade</button>
-      <%  }  %>
-      </div>
-    <%  })  %>
-  </div>
-</div>
+      <h4><%=book.bookName%></h4>
+      <img src=<%= book.picture %> >
 
-<% include partials/footer %>
+      <% if(currentUser && currentUser.booksOwned.indexOf(book._id.toString()) === -1){ %>
+        <!-- Modal Trigger -->
+        <a class="waves-effect waves-light btn" href="/books/<%= book._id %>">Request A Trade</a>
+
+
+
+        <%  }  %>
+        </div>
+        <%  })  %>
+      </div>
+    </div>
+
+
+
+
+
+    <% include partials/footer %>

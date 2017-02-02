@@ -1,18 +1,20 @@
 <% include partials/header.ejs %>
 
-<% var book = book[0]; %>
 <% console.log(book); %>
 <div class="container">
   <div class="row">
     <div class="col l4">
-      <img src="<%= book.picture %>" alt="" />
+      <img src=<%= book.picture %> alt="" />
     </div>
 
     <div class="col-l8">
       <h3>Description:</h3>
       <p>
-        <%= book.description %>
+         <%= book.description %>
       </p>
+      <form class="" action="index.html" method="post">
+        <button type="submit" name="button" class='waves-effect waves-light btn red'>Trade</button>
+      </form>
     </div>
   </div>
 </div>

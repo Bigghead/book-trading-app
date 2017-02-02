@@ -102,7 +102,7 @@ app.get('/books', function(req, res){
 
 //=========SHOW ONE route ========
 app.get('/books/:bookid', function(req, res){
-  Books.find(req.params.bookid, function(err, foundBook){
+  Books.findById(req.params.bookid, function(err, foundBook){
     if(err){
     console.log(err);
   } else {
@@ -176,7 +176,6 @@ app.get('/books/user/:userid/:bookid', function(req, res){
 app.get('/books/user/:id', function(req, res){
   var id = req.params.id;
   User.findById(id).populate('booksOwned').exec(function(err, foundUser){
-    console.log(foundUser);
     res.render('userBooks', {foundUser : foundUser});
   });
 });

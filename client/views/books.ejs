@@ -3,13 +3,13 @@
 <div class="container">
   <div class="row">
 
-    <% console.log(currentUser); %>
     <% books.forEach(function(book){ %>
+
       <div class="col l4 center-align">
       <h4><%=book.bookName%></h4>
       <img src=<%= book.picture %> >
 
-      <% if(currentUser && currentUser.booksOwned.indexOf(book._id.toString()) === -1){ %>
+      <% if(currentUser && book.ownedBy.toString() !== currentUser._id){ %>
         <!-- Modal Trigger -->
         <a class="waves-effect waves-light btn" href="/books/<%= book._id %>">Request A Trade</a>
 

@@ -29,7 +29,10 @@
             <tr>
               <td><img src=<%= book.picture %>></td>
               <td><%= book.bookName %></td>
-              <td><%= book.description %></td
+              <td><%= book.description %></td>
+              <td>
+                <a href='/books/<%= foundUser._id %>/ <%= book._id %>' class='btn-floating btn-large waves-effect waves-light red'>X</a>
+              </td>
             </tr>
           <%  });  %>
         <%  }  %>

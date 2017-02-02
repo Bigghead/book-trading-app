@@ -1,0 +1,19 @@
+<% include partials/header %>
+
+<div class="container">
+  <div class="row">
+
+    <% console.log(currentUser); %>
+    <% books.forEach(function(book){ %>
+      <div class="col l4 center-align">
+        <h4><%=book.bookName%></h4>
+        <img src=<%= book.picture %> >
+        <% if(currentUser && currentUser.booksOwned.indexOf(book._id.stringify) !== -1){ %>
+          <button>Request A Trade</button>
+      <%  }  %>
+      </div>
+    <%  })  %>
+  </div>
+</div>
+
+<% include partials/footer %>

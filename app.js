@@ -89,6 +89,16 @@ app.get('/', function(req, res){
   res.render('index.ejs');
 });
 
+app.get('/books', function(req, res){
+  Books.find({}, function(err, foundBooks){
+    if(err){
+      console.log(err);
+    } else {
+      res.render('books', {books: foundBooks});
+    }
+  });
+});
+
 app.get('/login',
   function(req, res){
   res.render('login', {env: keys});
@@ -113,9 +123,9 @@ app.post('/books/:id', function(req, res){
     if(err){
       console.log(err);
     } else {
-
+      console.log(results);
       Books.create({
-        bookName: req.body.newBook,
+        bookName: results[0].title,
         description: results[0].description.slice(0, 50) + '...',
         picture: results[0].thumbnail,
         ownedBy: req.params.id

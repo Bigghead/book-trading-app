@@ -106,8 +106,14 @@ app.get('/books/:bookid', function(req, res){
     if(err){
     console.log(err);
   } else {
-    console.log(foundBook);
-    res.render('singleBook', { book: foundBook });
+    User.findById(req.user._id).populate('booksOwned').exec(function(err, foundUser){
+      if(err){
+        console.log(err);
+      } else {
+        console.log(foundBook);
+        res.render('singleBook', { book: foundBook , currentUser: foundUser});
+      }
+    });
   }
   });
 });
@@ -178,6 +184,12 @@ app.get('/books/user/:id', function(req, res){
   User.findById(id).populate('booksOwned').exec(function(err, foundUser){
     res.render('userBooks', {foundUser : foundUser});
   });
+});
+
+
+//===============TRADE ROUTE======
+app.post("/books/trade/:bookOwner/:bookid/:yourid", function(req, res){
+  res.send('Trading');
 });
 
 // Perform the final stage of authentication and redirect to '/user'

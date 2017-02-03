@@ -1,6 +1,6 @@
 <% include partials/header.ejs %>
 
-<% console.log(book); %>
+<% console.log(currentUser); %>
 <div class="container">
   <div class="row">
     <div class="col l4">
@@ -8,15 +8,38 @@
     </div>
 
     <div class="col-l8">
+
       <h3>Description:</h3>
       <p>
-         <%= book.description %>
+         <%= book.description.slice(0, 250) + '...' %>
       </p>
-      <form class="" action="index.html" method="post">
-        <button type="submit" name="button" class='waves-effect waves-light btn red'>Trade</button>
-      </form>
+
+        <!-- Modal Trigger -->
+ <a class="waves-effect waves-light btn red" href="#modal1">Trade</a>
+
+ <!-- Modal Structure -->
+
+ <div id="modal1" class="modal">
+   <div class="modal-content">
+     <h4>Which Book Are You Trading?</h4>
+     <form action="/books/trade/<%= book.ownedBy %>/<%= book._id %>/<%= currentUser._id %>" method="post">
+
+     <select name="select" >
+       <option></option>
+       <% currentUser.booksOwned.forEach(function(book){ %>
+         <% console.log(book); %>
+         <option value="value1"> <%= book.bookName %> </option>
+      <%   });    %>
+      </select>
+      <button type="submit" name="button" class='waves-effect waves-light btn red'>Trade</button>
+    </form>
+
+   </div>
+ </div>
+
     </div>
   </div>
 </div>
+
 
 <% include partials/footer.ejs %>

@@ -29,6 +29,7 @@ var bookSearchOptions = {
 
 app.set('view engine', 'ejs');
 app.set('views',__dirname+'/client/views');
+app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(Session({

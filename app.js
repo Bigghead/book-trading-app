@@ -189,8 +189,35 @@ app.get('/books/user/:id', function(req, res){
 
 
 //===============TRADE ROUTE======
-app.post("/books/trade/:bookOwner/:bookid/:yourid", function(req, res){
-  res.send('Trading');
+app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
+  var tradingBook = Books.findById(req.body.book, function(err, foundBook){
+    if(err){
+      console.log(err);
+    } else {
+      return (foundBook);
+    }
+  });
+  Books.findById(req.params.theirBookid, function(err, foundBook){
+    if(err){
+      console.log(err);
+    } else {
+      User.findById(req.params.bookOwner, function(err, foundUser){
+        if(err){
+          console.log(err);
+        }  else{
+              foundUser.peopleWantingToTrade.push({
+                theirBook: foundBook.bookName,
+                theirBookID: foundBook._id,
+                userBook : tradingBook.bookName,
+                userBookID: tradingBook._id
+              });
+              foundUser.save();
+              res.redirect('/');
+            }
+          });
+        }
+      });
+  // res.send('Trading: ' + req.body.book + req.body.name);
 });
 
 // Perform the final stage of authentication and redirect to '/user'

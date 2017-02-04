@@ -24,10 +24,9 @@
      <h4 class='single-book-title'>Which Book Are You Trading?</h4>
      <form action="/books/trade/<%= book.ownedBy %>/<%= book._id %>/<%= currentUser._id %>" method="post">
 
-     <select name="select" >
-       <option></option>
+     <select name="book" >
        <% currentUser.booksOwned.forEach(function(book){ %>
-         <option value="value1"> <%= book.bookName %> </option>
+         <option value="<%= book._id %>" > <%= book.bookName %> </option>
       <%   });    %>
       </select>
       <button type="submit" name="button" class='waves-effect waves-light btn red'>Trade</button>

@@ -197,7 +197,7 @@ app.post("/books/trade/:bookOwner/:bookid/:yourid", function(req, res){
 app.get('/auth/callback',
   passport.authenticate('auth0', { failureRedirect: '/login' }),
   function(req, res) {
-    res.redirect('/');
+    res.redirect('/books');
   });
 
 app.listen('9000', function(){

@@ -21,7 +21,11 @@
           <li><a href="/login">Log In or Register</a></li>
         <%  } else { %>
           <li><a href="/#a"><%= currentUser.username %></a></li>
-          <li><a href="/books/user/<%= currentUser._id %>">My Books</a></li>
+              <% if(currentUser.peopleWantingToTrade.length > 0){  %>
+                <li><a href="/books/user/<%= currentUser._id %>">My Books <%= currentUser.peopleWantingToTrade.length %></a></li>
+              <% } else {  %>
+                <li><a href="/books/user/<%= currentUser._id %>">My Books</a></li>
+              <% }  %>
           <li><a href="/books">All Books</a></li>
           <li><a href="/logout">log Out</a></li>
         <%  } %>

@@ -1,6 +1,19 @@
 <% include partials/header %>
 
+<% console.log(currentUser); %>
+
 <div class="container">
+  <div class="row center-align">
+    <div class="col l6">
+      <a class="waves-effect waves-light btn blue" href="#a">Trade Requests: <%= currentUser.peopleWantingToTrade.length %></a>
+    </div>
+    <div class="col l6">
+      <a class="waves-effect waves-light btn green" href="#a">Pending Trades: <%= currentUser.userTrade.length %></a>
+    </div>
+  </div>
+</div>
+
+<div class="container books-container">
   <div class="row">
 
     <% books.forEach(function(book){ %>

@@ -13,17 +13,17 @@
   </div>
 <%  }  %>
 
-<div class="container books-container">
+<div class="container">
   <div class='row'>
     <% books.forEach(function(book){ %>
-      <div class="col s3 center-align">
-        <h5><%= book.bookName %></h5>
-
-      <img src=<%= book.picture %> >
+      <div class="col  l4 m6 s12 center-align books-container">
+      <h5 class='limit'><%= book.bookName %></h5>
+      <img src=<%= book.picture %> class='book-image'>
 
       <% if(currentUser && book.ownedBy.toString() !== currentUser._id){ %>
-        <!-- Modal Trigger -->
-        <a class="waves-effect waves-light btn" href="/books/<%= book._id %>">Request A Trade</a>
+        <div>
+          <a class="waves-effect waves-light btn" href="/books/<%= book._id %>">Request A Trade</a>
+        </div>
 
 
 

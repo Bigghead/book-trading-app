@@ -21,13 +21,12 @@
 
  <div id="modal1" class="modal">
    <div class="modal-content">
-     <h4>Which Book Are You Trading?</h4>
+     <h4 class='single-book-title'>Which Book Are You Trading?</h4>
      <form action="/books/trade/<%= book.ownedBy %>/<%= book._id %>/<%= currentUser._id %>" method="post">
 
      <select name="select" >
        <option></option>
        <% currentUser.booksOwned.forEach(function(book){ %>
-         <% console.log(book); %>
          <option value="value1"> <%= book.bookName %> </option>
       <%   });    %>
       </select>

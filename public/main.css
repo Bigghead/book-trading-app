@@ -14,9 +14,27 @@ body{
 }
 
 
-.books-container{
+/*.books-container{
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
+}*/
+
+.books-container{
+  height: 300px;
+}
+
+.book-image{
+  height: 200px;
+}
+
+.limit {
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+
+.single-book-title{
+  color: black;
 }

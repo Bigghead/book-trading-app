@@ -220,6 +220,11 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
   // res.send('Trading: ' + req.body.book + req.body.name);
 });
 
+
+app.get('/user/tradeRequest', function(req, res){
+  res.render('tradeRequest.ejs');
+});
+
 // Perform the final stage of authentication and redirect to '/user'
 app.get('/auth/callback',
   passport.authenticate('auth0', { failureRedirect: '/login' }),

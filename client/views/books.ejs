@@ -2,24 +2,27 @@
 
 <% console.log(currentUser); %>
 
-<div class="container">
-  <div class="row center-align">
-    <div class="col l6">
-      <a class="waves-effect waves-light btn blue" href="#a">Trade Requests: <%= currentUser.peopleWantingToTrade.length %></a>
-    </div>
-    <div class="col l6">
-      <a class="waves-effect waves-light btn green" href="#a">Pending Trades: <%= currentUser.userTrade.length %></a>
+<% if(currentUser){  %>
+  <div class="container">
+    <div class="row center-align">
+      <div class="col l6">
+        <a class="waves-effect waves-light btn blue" href="#a">Trade Requests: <%= currentUser.peopleWantingToTrade.length %></a>
+      </div>
+      <div class="col l6">
+        <a class="waves-effect waves-light btn green" href="#a">Pending Trades: <%= currentUser.userTrade.length %></a>
+      </div>
     </div>
   </div>
-</div>
+<%  }  %>
 
-<div class="container books-container">
-  <div class="row">
+
+<div class="container ">
+  <div class="row ">
 
     <% books.forEach(function(book){ %>
+      <div class="col s3 center-align">
 
-      <div class="col l4 center-align">
-      <h4><%=book.bookName%></h4>
+      <h3><%= book.bookName %></h3>
       <img src=<%= book.picture %> >
 
       <% if(currentUser && book.ownedBy.toString() !== currentUser._id){ %>
@@ -29,8 +32,9 @@
 
 
         <%  }  %>
-        </div>
+          </div>
         <%  })  %>
+
       </div>
     </div>
 

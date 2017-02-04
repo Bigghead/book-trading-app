@@ -173,7 +173,7 @@ app.get('/books/user/:userid/:bookid', function(req, res){
         if(err){
           console.log(err)
         } else {
-          res.redirect('/books/' + req.params.userid);
+          res.redirect('/userBooks/' + req.params.userid);
         }
       });
     }

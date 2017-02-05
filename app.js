@@ -240,6 +240,18 @@ app.get('/auth/callback',
     res.redirect('/books');
   });
 
+  app.get('/user', function(req, res){
+    User.findById('5893b5c407cceec2aebe320a', function(err, foundUser){
+      if(err){
+        console.log(err);
+      } else {
+        foundUser.booksOwned.push('58956513c0405ecd2c96e123');
+        foundUser.save();
+        res.redirect('/books/user/5893b5c407cceec2aebe320a');
+      }
+    });
+  });
+
 app.listen('9000', function(){
   console.log('Book Trading App Live!');
 });

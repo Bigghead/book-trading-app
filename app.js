@@ -111,7 +111,6 @@ app.get('/books/:bookid', function(req, res){
       if(err){
         console.log(err);
       } else {
-        console.log(foundBook);
         res.render('singleBook', { book: foundBook , currentUser: foundUser});
       }
     });
@@ -137,7 +136,6 @@ app.post('/books/user/:id', function(req, res){
     if(err){
       console.log(err);
     } else {
-      console.log(results);
       Books.create({
         bookName: results[0].title,
         description: results[0].description,
@@ -194,7 +192,16 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
     if(err){
       console.log(err);
     } else {
-      return (foundBook);
+      User.findById(req.params.yourid, function(err, foundUser){
+        if(err){
+          console.log(err);
+        } else {
+          foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(foundBook._id), 1);
+          foundUser.save();
+          return (foundBook);
+
+        }
+      })
     }
   });
   Books.findById(req.params.theirBookid, function(err, foundBook){
@@ -205,6 +212,7 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
         if(err){
           console.log(err);
         }  else{
+          console.log(tradingBook);
               foundUser.peopleWantingToTrade.push({
                 theirBook: foundBook.bookName,
                 theirBookID: foundBook._id,
@@ -212,7 +220,7 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
                 userBookID: tradingBook._id
               });
               foundUser.save();
-              res.redirect('/');
+              res.redirect('/books');
             }
           });
         }

@@ -38,3 +38,7 @@ body{
 .single-book-title{
   color: black;
 }
+
+tr:hover{
+  color: black;
+}

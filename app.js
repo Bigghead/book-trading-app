@@ -188,43 +188,56 @@ app.get('/books/user/:id', function(req, res){
 
 //===============TRADE ROUTE======
 app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
-  var tradingBook = Books.findById(req.body.book, function(err, foundBook){
+  var done = false;
+  Books.findById(req.body.book, function(err, tradingBook){
     if(err){
       console.log(err);
     } else {
-      User.findById(req.params.yourid, function(err, foundUser){
+      User.findById(req.params.yourid, function(err, you){
         if(err){
           console.log(err);
         } else {
-          foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(foundBook._id), 1);
-          foundUser.save();
-          return (foundBook);
 
+
+          Books.findById(req.params.theirBookid, function(err, foundBook){
+            if(err){
+              console.log(err);
+            } else {
+              User.findById(req.params.bookOwner, function(err, foundUser){
+                if(err){
+                  console.log(err);
+                }  else{
+
+                  you.booksOwned.splice(you.booksOwned.indexOf(tradingBook._id), 1);
+                  you.userTrade.push({
+                    userBook: tradingBook.bookName,
+                    userBookID: req.body.book,
+                    theirBook: foundBook.bookName,
+                    theirBookID: req.params.theirBookid,
+                    accepted: false
+                  });
+                  you.save();
+                  console.log(you);
+                      foundUser.peopleWantingToTrade.push({
+                        theirBook: tradingBook.bookName,
+                        theirBookID: tradingBook._id,
+                        userBook : foundBook.bookName,
+                        userBookID: foundBook._id
+                      });
+                      foundUser.save();
+                      done = true;
+                      if(done){
+                      res.redirect('/books');
+                    }
+                    }
+                  });
+                }
+              });
         }
       })
     }
   });
-  Books.findById(req.params.theirBookid, function(err, foundBook){
-    if(err){
-      console.log(err);
-    } else {
-      User.findById(req.params.bookOwner, function(err, foundUser){
-        if(err){
-          console.log(err);
-        }  else{
-          console.log(tradingBook);
-              foundUser.peopleWantingToTrade.push({
-                theirBook: foundBook.bookName,
-                theirBookID: foundBook._id,
-                userBook : tradingBook.bookName,
-                userBookID: tradingBook._id
-              });
-              foundUser.save();
-              res.redirect('/books');
-            }
-          });
-        }
-      });
+
   // res.send('Trading: ' + req.body.book + req.body.name);
 });
 
@@ -240,11 +253,14 @@ app.get('/auth/callback',
     res.redirect('/books');
   });
 
+//=======Trade test==========
+//===========================
   app.get('/user', function(req, res){
     User.findById('5893b5c407cceec2aebe320a', function(err, foundUser){
       if(err){
         console.log(err);
       } else {
+        console.log(foundUser);
         foundUser.booksOwned.push('58956513c0405ecd2c96e123');
         foundUser.save();
         res.redirect('/books/user/5893b5c407cceec2aebe320a');

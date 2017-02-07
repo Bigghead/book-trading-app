@@ -39,6 +39,6 @@ body{
   color: black;
 }
 
-tr:hover{
+.blackText:hover{
   color: black;
 }

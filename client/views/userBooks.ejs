@@ -25,7 +25,7 @@
           <tbody>
           <% foundUser.booksOwned.forEach(function(book){ %>
           <%   console.log(book); %>
-            <tr>
+            <tr class='blackText'>
               <td><img src=<%= book.picture %>></td>
               <td><%= book.bookName %></td>
               <td><%= book.description.slice(0, 80) + '...' %></td>

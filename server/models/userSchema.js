@@ -10,19 +10,14 @@ var userSchema = new mongoose.Schema({
   ],
   userTrade:[
     {
-      userBook: String,
-      userBookID: mongoose.Schema.Types.ObjectId,
-      theirBook: String,
-      theirBookID: mongoose.Schema.Types.ObjectId,
-      accepted: Boolean
+      type: mongoose.Schema.Types.ObjectId,
+      ref : 'Usertrade'
     }
   ],
   peopleWantingToTrade:[
     {
-      theirBook: String,
-      theirBookID: mongoose.Schema.Types.ObjectId,
-      userBook : String,
-      userBookID: mongoose.Schema.Types.ObjectId
+      type: mongoose.Schema.Types.ObjectId,
+      ref : 'Requestedtrade'
     }
   ]
 });

@@ -14,8 +14,10 @@ mongoose.Promise = global.Promise;
 mongoose.connect(keys.mLab);
 
 //======Model Requires=====
-var Books = require('./server/models/bookSchema.js'),
-    User = require('./server/models/userSchema.js');
+var Books          = require('./server/models/bookSchema.js'),
+    User           = require('./server/models/userSchema.js'),
+    UserTrade      = require('./server/models/userTrade.js'),
+    RequestedTrade = require('./server/models/RequestedTrade.js');
 
 var bookSearchOptions = {
         key: keys.googleBooksApi,

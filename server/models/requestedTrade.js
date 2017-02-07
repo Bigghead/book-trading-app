@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
 var requested = new mongoose.Schema({
+  theirID : mongoose.Schema.Types.ObjectId,
   theirBook: String,
   theirBookID: mongoose.Schema.Types.ObjectId,
   userBook : String,

@@ -132,7 +132,7 @@ app.get('/logout', function(req, res){
 });
 
 
-app.post('/books/user/:id', function(req, res){
+app.post('/user/:id', function(req, res){
 
   bookSearch.search(req.body.newBook, function(err, results){
     if(err){
@@ -153,7 +153,7 @@ app.post('/books/user/:id', function(req, res){
             } else {
               foundUser.booksOwned.push(madeBook);
               foundUser.save();
-              res.redirect('/books/user/' + req.params.id);
+              res.redirect('/user/' + req.params.id);
             }
           });
         }
@@ -162,25 +162,25 @@ app.post('/books/user/:id', function(req, res){
   });
 });
 
-app.get('/books/user/:userid/:bookid', function(req, res){
+app.get('/user/:userid/:bookid', function(req, res){
   User.findById(req.params.userid, function(err, foundUser){
     if(err){
       console.log(err);
     } else {
-      foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(req.params.id), 1);
+      foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(req.params.bookid), 1);
       foundUser.save();
       Books.findByIdAndRemove(req.params.bookid, function(err, success){
         if(err){
           console.log(err)
         } else {
-          res.redirect('/books/user/' + req.params.userid);
+          res.redirect('/user/' + req.params.userid);
         }
       });
     }
   });
 });
 
-app.get('/books/user/:id', function(req, res){
+app.get('/user/:id', function(req, res){
   var id = req.params.id;
   User.findById(id).populate('booksOwned').exec(function(err, foundUser){
     res.render('userBooks', {foundUser : foundUser});

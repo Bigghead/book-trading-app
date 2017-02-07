@@ -10,4 +10,4 @@ var userTradeSchema = new mongoose.Schema({
 
 var UserTrade = mongoose.model('Usertrade', userTradeSchema);
 
-module.exports = userTrade;
+module.exports = UserTrade;

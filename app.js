@@ -266,6 +266,28 @@ app.get('/tradeRequest', function(req, res){
   });
 });
 
+app.get('/tradeRequest/:tradeid', function(req, res){
+  RequestedTrade.findById(req.params.tradeid, function(err, foundTrade){
+    if(err){
+      console.log(err);
+    } else {
+
+      User.findById(req.user._id, function(err, requestingUser){
+        if(err){
+          console.log(err);
+        } else {
+          requestingUser.booksOwned.splice(requestingUser.booksOwned.indexOf(foundTrade.userBookID));
+          requestingUser.booksOwned.push(foundTrade.theirBookID);
+          requestingUser.save()
+          .then(function(){
+            res.redirect('/books');
+          });
+        }
+      });
+    }
+  });
+});
+
 // Perform the final stage of authentication and redirect to '/user'
 app.get('/auth/callback',
   passport.authenticate('auth0', { failureRedirect: '/login' }),

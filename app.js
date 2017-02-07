@@ -233,14 +233,14 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
                           console.log(err);
                         }  else {
                             tradingUser.userTrade.push(madeUserTrade);
-                            tradingUser.save();
-                            requestedUser.peopleWantingToTrade.push(madeRequestedTrade);
-                            requestedUser.save();
-
-                            done = true;
-                              if(done){
-                                res.redirect('/books');
-                              }
+                            tradingUser.save()
+                            .then(function(){
+		                            requestedUser.peopleWantingToTrade.push(madeRequestedTrade);
+		                            requestedUser.save();
+                              })
+		                        .then(function(){
+			                            res.redirect('/books');
+                              });
                             }
                           });
                         }
@@ -256,8 +256,14 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
 });
 
 
-app.get('/user/tradeRequest', function(req, res){
-  res.render('tradeRequest.ejs');
+app.get('/tradeRequest', function(req, res){
+  User.findById(req.user._id).populate('peopleWantingToTrade').exec(function(err, foundUser){
+    if(err){
+      console.log(err);
+    } else {
+      res.render('tradeRequest', { currentUser: foundUser});
+    }
+  });
 });
 
 // Perform the final stage of authentication and redirect to '/user'

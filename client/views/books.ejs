@@ -1,11 +1,11 @@
 <% include partials/header %>
 
 <% if(currentUser){  %>
-  <% console.log(currentUser.userTrade.length); %>
+  <% console.log(currentUser); %>
   <div class="container">
     <div class="row center-align">
       <div class="col l6">
-        <a class="waves-effect waves-light btn blue" href="/user/tradeRequest">Trade Requests: <%= currentUser.peopleWantingToTrade.length %></a>
+        <a class="waves-effect waves-light btn blue" href="/tradeRequest">Trade Requests: <%= currentUser.peopleWantingToTrade.length %></a>
       </div>
       <div class="col l6">
         <a class="waves-effect waves-light btn green" href="#a">Pending Trades: <%= currentUser.userTrade.length %></a>

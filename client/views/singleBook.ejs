@@ -1,5 +1,7 @@
 <% include partials/header.ejs %>
 
+
+<% console.log(currentUser); %>
 <div class="container">
   <div class="row">
     <div class="col l4">
@@ -25,7 +27,11 @@
 
      <select name="book" >
        <% currentUser.booksOwned.forEach(function(book){ %>
-         <option value="<%= book._id %>" > <%= book.bookName %> </option>
+        <% currentUser.userTrade.forEach(function(trade){ %>
+        <%   if(book._id !== trade._id){ %>
+          <option value="<%= book._id %>" > <%= book.bookName %> </option>
+          <% }  %>
+        <% });  %>
       <%   });    %>
       </select>
       <button type="submit" name="button" class='waves-effect waves-light btn red'>Trade</button>

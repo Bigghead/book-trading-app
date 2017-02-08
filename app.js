@@ -109,7 +109,7 @@ app.get('/books/:bookid', function(req, res){
     if(err){
     console.log(err);
   } else {
-    User.findById(req.user._id).populate('booksOwned').exec(function(err, foundUser){
+    User.findById(req.user._id).populate('booksOwned').populate('userTrade').exec(function(err, foundUser){
       if(err){
         console.log(err);
       } else {
@@ -227,7 +227,9 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
                         theirBook: tradingBook.bookName,
                         theirBookID: tradingBook._id,
                         userBook : requestedBook.bookName,
-                        userBookID: requestedBook._id
+                        userBookID: requestedBook._id,
+                        otherUserTradeID : madeUserTrade._id
+
                       }, function(err, madeRequestedTrade){
                         if(err){
                           console.log(err);
@@ -267,20 +269,52 @@ app.get('/tradeRequest', function(req, res){
 });
 
 app.get('/tradeRequest/:tradeid', function(req, res){
-  RequestedTrade.findById(req.params.tradeid, function(err, foundTrade){
+
+  var done = false;
+  RequestedTrade.findByIdAndRemove(req.params.tradeid, function(err, foundTrade){
     if(err){
       console.log(err);
     } else {
 
-      User.findById(req.user._id, function(err, requestingUser){
+      UserTrade.findByIdAndRemove(foundTrade.otherUserTradeID, function(err, foundUserTrade){
         if(err){
           console.log(err);
         } else {
-          requestingUser.booksOwned.splice(requestingUser.booksOwned.indexOf(foundTrade.userBookID));
-          requestingUser.booksOwned.push(foundTrade.theirBookID);
-          requestingUser.save()
-          .then(function(){
-            res.redirect('/books');
+
+          User.findById(req.user._id, function(err, requestingUser){
+            if(err){
+              console.log(err);
+            } else {
+              requestingUser.booksOwned.splice(requestingUser.booksOwned.indexOf(foundTrade.userBookID));
+              requestingUser.booksOwned.push(foundTrade.theirBookID);
+              requestingUser.peopleWantingToTrade.splice(requestingUser.peopleWantingToTrade.indexOf(req.params.tradeid));
+
+              requestingUser.save()
+
+              User.findById(foundTrade.theirID, function(err, foundUser){
+                if(err){
+                  console.log(err);
+                } else {
+                  foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(foundTrade.theirBookID));
+                  foundUser.booksOwned.push(foundTrade.userBookID);
+
+                  //NEED to clear this foundUser's userTrade, get rid of this trade, and re-push his book id back into his booksOwned
+                  foundUser.userTrade.forEach(function(userTrade){
+                    if(userTrade._id === foundTrade.otherUserTradeID){
+                      foundUser.userTrade.splice(foundUser.userTrade.indexOf(userTrade));
+                      done = true;
+                    }
+                  });
+
+                  if(done){
+                    foundUser.save()
+                    .then(function(){
+                      res.redirect('/books');
+                    });
+                  }
+                }
+              });
+            }
           });
         }
       });

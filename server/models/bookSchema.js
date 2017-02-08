@@ -4,7 +4,7 @@ var bookSchema = new mongoose.Schema({
   bookName: String,
   description: String,
   picture: String,
-  ownedBy: mongoose.Schema.Types.ObjectId
+  ownedBy : mongoose.Schema.Types.ObjectId
 });
 
 var Book = mongoose.model('Book', bookSchema);

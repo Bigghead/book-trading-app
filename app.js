@@ -271,7 +271,7 @@ app.get('/tradeRequest', function(req, res){
   });
 });
 
-app.get('/tradeRequest/:tradeid', function(req, res){
+app.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', function(req, res){
 
   var done = false;
   RequestedTrade.findByIdAndRemove(req.params.tradeid, function(err, foundTrade){
@@ -283,6 +283,7 @@ app.get('/tradeRequest/:tradeid', function(req, res){
         if(err){
           console.log(err);
         } else {
+
 
           User.findById(req.user._id, function(err, requestingUser){
             if(err){
@@ -313,11 +314,23 @@ app.get('/tradeRequest/:tradeid', function(req, res){
                     }
                   });
 
-                  done = true;
-
-                  if(done){
-                      res.redirect('/books');
-                  }
+                  Books.findByIdAndUpdate(req.params.requestedBookId,{
+                    ownedBy : requestingUser._id
+                  }).exec()
+                    .then(function(){
+                      Books.findByIdAndUpdate(req.params.askerBookId,{
+                        ownedBy: foundUser._id
+                      }).exec()
+                      .then(function(){
+                          res.redirect('/books');
+                      });
+                    });
+                  //
+                  // done = true;
+                  //
+                  // if(done){
+                  //     res.redirect('/books');
+                  // }
                 }
               });
             }

@@ -153,7 +153,10 @@ app.post('/user/:id', function(req, res){
             } else {
               foundUser.booksOwned.push(madeBook);
               foundUser.save();
-              res.redirect('/user/' + req.params.id);
+              console.log(foundUser.booksOwned);
+              //.then(function(){
+                res.redirect('/user/' + req.params.id);
+            //  });
             }
           });
         }
@@ -163,7 +166,7 @@ app.post('/user/:id', function(req, res){
 });
 
 app.get('/user/:userid/:bookid', function(req, res){
-  User.findById(req.params.userid, function(err, foundUser){
+  User.findByIdAndUpdate(req.params.userid, function(err, foundUser){
     if(err){
       console.log(err);
     } else {
@@ -211,10 +214,10 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
                   console.log(err);
                 } else {
 
-                  tradingUser.booksOwned.splice(tradingUser.booksOwned.indexOf(tradingBook._id), 1);
+                  //tradingUser.booksOwned.splice(tradingUser.booksOwned.indexOf(tradingBook._id), 1);
                   UserTrade.create({
                     userBook: tradingBook.bookName,
-                    userBookID: tradingUser._id,
+                    userBookID: tradingBook._id,
                     requestedBook: requestedBook.bookName,
                     requestedBookID: requestedBook._id,
                     accepted: false
@@ -285,9 +288,11 @@ app.get('/tradeRequest/:tradeid', function(req, res){
             if(err){
               console.log(err);
             } else {
-              requestingUser.booksOwned.splice(requestingUser.booksOwned.indexOf(foundTrade.userBookID));
+
+              //take out requesting user's book, push the other user's book in
+              requestingUser.booksOwned.splice(requestingUser.booksOwned.indexOf(foundTrade.userBookID), 1);
               requestingUser.booksOwned.push(foundTrade.theirBookID);
-              requestingUser.peopleWantingToTrade.splice(requestingUser.peopleWantingToTrade.indexOf(req.params.tradeid));
+              requestingUser.peopleWantingToTrade.splice(requestingUser.peopleWantingToTrade.indexOf(req.params.tradeid), 1);
 
               requestingUser.save()
 
@@ -295,22 +300,23 @@ app.get('/tradeRequest/:tradeid', function(req, res){
                 if(err){
                   console.log(err);
                 } else {
-                  foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(foundTrade.theirBookID));
+
+                  //take out  user's book, push the requesting user's book in
+                  foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(foundTrade.theirBookID), 1);
                   foundUser.booksOwned.push(foundTrade.userBookID);
+                  foundUser.save();
 
                   //NEED to clear this foundUser's userTrade, get rid of this trade, and re-push his book id back into his booksOwned
                   foundUser.userTrade.forEach(function(userTrade){
                     if(userTrade._id === foundTrade.otherUserTradeID){
-                      foundUser.userTrade.splice(foundUser.userTrade.indexOf(userTrade));
-                      done = true;
+                      foundUser.userTrade.splice(foundUser.userTrade.indexOf(userTrade), 1);
                     }
                   });
 
+                  done = true;
+
                   if(done){
-                    foundUser.save()
-                    .then(function(){
                       res.redirect('/books');
-                    });
                   }
                 }
               });
@@ -329,20 +335,7 @@ app.get('/auth/callback',
     res.redirect('/books');
   });
 
-//=======Trade test==========
-//===========================
-  app.get('/user', function(req, res){
-    User.findById('5893b5c407cceec2aebe320a', function(err, foundUser){
-      if(err){
-        console.log(err);
-      } else {
-        console.log(foundUser);
-        foundUser.booksOwned.push('58956513c0405ecd2c96e123');
-        foundUser.save();
-        res.redirect('/books/user/5893b5c407cceec2aebe320a');
-      }
-    });
-  });
+
 
 app.listen('9000', function(){
   console.log('Book Trading App Live!');

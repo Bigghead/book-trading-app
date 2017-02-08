@@ -1,7 +1,8 @@
 <% include partials/header %>
 
 <% if(currentUser){  %>
-  <% console.log(currentUser); %>
+  <% console.log(currentUser.userTrade); %>
+
   <div class="container">
     <div class="row center-align">
       <div class="col l6">
@@ -15,14 +16,15 @@
 <%  }  %>
 
 <div class="container">
+  <h2 class='center-align'>Book Collection</h2>
   <div class='row'>
     <% books.forEach(function(book){ %>
       <div class="col  l4 m6 s12 center-align books-container">
       <h5 class='limit'><%= book.bookName %></h5>
       <img src=<%= book.picture %> class='book-image'>
 
-      
-      <% if(currentUser && currentUser.booksOwned.indexOf(book._id) === -1){ %>
+
+      <% if(currentUser && currentUser.booksOwned.indexOf(book._id.toString()) === -1){ %>
         <div>
           <a class="waves-effect waves-light btn" href="/books/<%= book._id %>">Request A Trade</a>
         </div>

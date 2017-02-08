@@ -12,33 +12,42 @@
 
       <h3>Description:</h3>
       <p>
-         <%= book.description.slice(0, 250) + '...' %>
+        <%= book.description.slice(0, 250) + '...' %>
       </p>
 
-        <!-- Modal Trigger -->
- <a class="waves-effect waves-light btn red" href="#modal1">Trade</a>
+      <!-- Modal Trigger -->
+      <a class="waves-effect waves-light btn red" href="#modal1">Trade</a>
 
- <!-- Modal Structure -->
+      <!-- Modal Structure -->
 
- <div id="modal1" class="modal">
-   <div class="modal-content">
-     <h4 class='single-book-title'>Which Book Are You Trading?</h4>
-     <form action="/books/trade/<%= book.ownedBy %>/<%= book._id %>/<%= currentUser._id %>" method="post">
+      <div id="modal1" class="modal">
+        <div class="modal-content">
+          <h4 class='single-book-title'>Which Book Are You Trading?</h4>
+          <form action="/books/trade/<%= book.ownedBy %>/<%= book._id %>/<%= currentUser._id %>" method="post">
 
-     <select name="book" >
-       <% currentUser.booksOwned.forEach(function(book){ %>
-        <% currentUser.userTrade.forEach(function(trade){ %>
-        <%   if(book._id !== trade._id){ %>
-          <option value="<%= book._id %>" > <%= book.bookName %> </option>
-          <% }  %>
-        <% });  %>
-      <%   });    %>
-      </select>
-      <button type="submit" name="button" class='waves-effect waves-light btn red'>Trade</button>
-    </form>
+            <select name="book" >
 
-   </div>
- </div>
+            <%  if(currentUser.userTrade.length === 0){  %>
+              <%  currentUser.booksOwned.forEach(function(book){  %>
+                  <option value="<%= book._id %>" > <%= book.bookName %> </option>
+               <%  }); %>
+
+            <%  } else { %>
+              <%  currentUser.booksOwned.forEach(function(book){  %>
+                  <%  currentUser.userTrade.forEach(function(trade){  %>
+                    <% if(trade.userBookID.toString() !== book._id.toString()){ %>
+                      <option value="<%= book._id %>" > <%= book.bookName %> </option>
+                      <%  }  %>
+                  <%  });  %>
+              <%  });  %>
+          <%  } %>
+
+            </select>
+            <button type="submit" name="button" class='waves-effect waves-light btn red'>Trade</button>
+          </form>
+
+        </div>
+      </div>
 
     </div>
   </div>

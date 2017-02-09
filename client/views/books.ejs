@@ -2,7 +2,6 @@
 
 <% if(currentUser){  %>
   <% console.log(currentUser.userTrade); %>
-
   <div class="container">
     <div class="row center-align">
       <div class="col l6">
@@ -24,7 +23,7 @@
       <img src=<%= book.picture %> class='book-image'>
 
 
-      <% if(currentUser && currentUser.booksOwned.indexOf(book._id.toString()) === -1){ %>
+      <% if(currentUser && book.ownedBy.toString() !== currentUser._id.toString()){ %>
         <div>
           <a class="waves-effect waves-light btn" href="/books/<%= book._id %>">Request A Trade</a>
         </div>

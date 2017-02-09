@@ -86,9 +86,22 @@ passport.use(strategy);
 
 
 app.use(function(req, res, next){
-  res.locals.currentUser = req.user;
-  next();
+  if(req.user){
+    User.findById(req.user._id, function(err, foundUser){
+     if(err){
+      console.log(err);
+     } else {
+       res.locals.currentUser = foundUser;
+       next();
+     }
+    })
+  } else {
+    res.locals.currentUser = undefined;
+    next();
+ }
 });
+
+
 app.get('/', function(req, res){
   res.render('index.ejs');
 });
@@ -244,7 +257,7 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
 		                            requestedUser.save();
                               })
 		                        .then(function(){
-			                            res.redirect('/books');
+			                            res.redirect('/user/' + tradingUser._id);
                               });
                             }
                           });
@@ -253,7 +266,7 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
                     }
                   });
                 }
-              })
+              });
             }
           });
         }
@@ -307,24 +320,38 @@ app.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', function(req, re
                   foundUser.booksOwned.push(foundTrade.userBookID);
                   foundUser.save();
 
+
                   //NEED to clear this foundUser's userTrade, get rid of this trade, and re-push his book id back into his booksOwned
-                  foundUser.userTrade.forEach(function(userTrade){
-                    if(userTrade._id === foundTrade.otherUserTradeID){
-                      foundUser.userTrade.splice(foundUser.userTrade.indexOf(userTrade), 1);
-                    }
+
+                  return new Promise(function(resolve, reject){
+                    foundUser.userTrade.forEach(function(userTrade){
+                      console.log(userTrade._id);
+                      console.log(foundTrade.otherUserTradeID);
+                    // if(userTrade._id.toString() === foundTrade.otherUserTradeID.toString()){
+                    //   foundUser.userTrade.splice(foundUser.userTrade.indexOf(userTrade), 1);
+                    // }
+                  });
+                  resolve(foundUser);
+                  })
+
+
+                  //Change the corresponding books' owners because we're hitting
+                  //a route that depends on the book's owner later. Want it to be
+                  //different every time, otherwise we're asking trading one user for a book they already own later
+                  .then(function(){
+                    Books.findByIdAndUpdate(req.params.requestedBookId,{
+                      ownedBy : requestingUser._id
+                    }).exec()
+                      .then(function(){
+                        Books.findByIdAndUpdate(req.params.askerBookId,{
+                          ownedBy: foundUser._id
+                        }).exec()
+                        .then(function(){
+                            res.redirect('/books');
+                        });
+                      });
                   });
 
-                  Books.findByIdAndUpdate(req.params.requestedBookId,{
-                    ownedBy : requestingUser._id
-                  }).exec()
-                    .then(function(){
-                      Books.findByIdAndUpdate(req.params.askerBookId,{
-                        ownedBy: foundUser._id
-                      }).exec()
-                      .then(function(){
-                          res.redirect('/books');
-                      });
-                    });
                   //
                   // done = true;
                   //

@@ -1,6 +1,7 @@
 var passport       = require('passport'),
     Auth0Strategy  = require('passport-auth0'),
     ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn(),
+    keys           = require('../..//keys'),
     express        = require('express'),
     router         = express.Router();
 

@@ -1,6 +1,7 @@
 var express = require('express'),
     router  = express.Router(),
-    Books   = require('../models/bookSchema.js');
+    Books   = require('../models/bookSchema.js'),
+    User    = require('../models/userSchema.js');
 
 router.get('/books', function(req, res){
   Books.find({}, function(err, foundBooks){

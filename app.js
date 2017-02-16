@@ -21,7 +21,8 @@ var Books          = require('./server/models/bookSchema.js'),
 
 
 //======ROUTES REQUIRES======
-var bookRoute = require('./server/routes/books.js');
+var bookRoute = require('./server/routes/books.js'),
+    authRoute = require('./server/routes/authentication.js');
 
 
 
@@ -108,24 +109,13 @@ app.use(function(req, res, next){
 });
 
 app.use(bookRoute);
+app.user(authRoute);
 
 
 app.get('/', function(req, res){
   res.render('index.ejs');
 });
 
-
-
-app.get('/login',
-  function(req, res){
-  res.render('login', {env: keys});
-  });
-
-// Perform session logout and redirect to homepage
-app.get('/logout', function(req, res){
-  req.logout();
-  res.redirect('/');
-});
 
 
 app.post('/user/:id', function(req, res){

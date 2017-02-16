@@ -19,6 +19,12 @@ var Books          = require('./server/models/bookSchema.js'),
     UserTrade      = require('./server/models/userTrade.js'),
     RequestedTrade = require('./server/models/RequestedTrade.js');
 
+
+//======ROUTES REQUIRES======
+var bookRoute = require('./server/routes/books.js');
+
+
+
 var bookSearchOptions = {
         key: keys.googleBooksApi,
         field: 'title',
@@ -101,37 +107,14 @@ app.use(function(req, res, next){
  }
 });
 
+app.use(bookRoute);
+
 
 app.get('/', function(req, res){
   res.render('index.ejs');
 });
 
-app.get('/books', function(req, res){
-  Books.find({}, function(err, foundBooks){
-    if(err){
-      console.log(err);
-    } else {
-      res.render('books', {books: foundBooks});
-    }
-  });
-});
 
-//=========SHOW ONE route ========
-app.get('/books/:bookid', function(req, res){
-  Books.findById(req.params.bookid, function(err, foundBook){
-    if(err){
-    console.log(err);
-  } else {
-    User.findById(req.user._id).populate('booksOwned').populate('userTrade').exec(function(err, foundUser){
-      if(err){
-        console.log(err);
-      } else {
-        res.render('singleBook', { book: foundBook , currentUser: foundUser});
-      }
-    });
-  }
-  });
-});
 
 app.get('/login',
   function(req, res){
@@ -351,13 +334,6 @@ app.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', function(req, re
                         });
                       });
                   });
-
-                  //
-                  // done = true;
-                  //
-                  // if(done){
-                  //     res.redirect('/books');
-                  // }
                 }
               });
             }

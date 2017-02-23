@@ -1,5 +1,12 @@
 <% include partials/header.ejs %>
 
+<div class="container">
+  <h1><%= foundUser.userName%></h1>
+  <ul>
+    <li><%= foundUser.settings.name%></li>
+  </ul>
+</div>
 
+<a href="/user/<%= foundUser._id%>/user-profile/edit" class='btn btn-primary'>Edit Settings</a>
 
 <% include partials/footer.ejs %>

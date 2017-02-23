@@ -27,6 +27,8 @@
 
             <select name="book" >
 
+              <option value="" disabled selected>Choose your option</option>
+
             <%  if(currentUser.userTrade.length === 0){  %>
               <%  currentUser.booksOwned.forEach(function(book){  %>
                   <option value="<%= book._id %>" > <%= book.bookName %> </option>

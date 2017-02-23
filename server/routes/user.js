@@ -28,6 +28,16 @@ var bookSearchOptions = {
    });
  });
 
+ router.get('/user/:id/user-profile/edit', function(req, res){
+   User.findById(req.params.id, function(err, foundUser){
+     if(err){
+       res.send(err);
+     } else {
+       res.render('profileEdit', { foundUser : foundUser });
+     }
+   });
+ });
+
 router.get('/user/:id', function(req, res){
   var id = req.params.id;
   User.findById(id).populate('booksOwned').exec(function(err, foundUser){

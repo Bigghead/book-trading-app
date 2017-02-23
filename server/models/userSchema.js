@@ -2,6 +2,11 @@ var mongoose = require('mongoose');
 
 var userSchema = new mongoose.Schema({
   username: String,
+  settings: {
+    name: String,
+    city: String,
+    state: String
+  },
   booksOwned: [
     {
       type: mongoose.Schema.Types.ObjectId,

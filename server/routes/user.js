@@ -49,7 +49,7 @@ var bookSearchOptions = {
        foundUser.settings.state = userData.state;
 
        foundUser.save().then(function(foundUser){
-         res.redirect('/user/' + foundUser._id + '/user-profile');
+         res.redirect(`/user/${foundUser._id}/user-profile`);
        });
      }
    })
@@ -86,7 +86,6 @@ router.post('/user/:id', function(req, res){
             } else {
               foundUser.booksOwned.push(madeBook);
               foundUser.save();
-              console.log(foundUser.booksOwned);
               //.then(function(){
                 res.redirect('/user/' + req.params.id);
             //  });
@@ -104,12 +103,10 @@ router.get('/user/:userid/:bookid', function(req, res){
         if(err){
           console.log(err)
         } else {
-          console.log('sucess');
           User.findById(req.params.userid, function(err, foundUser){
             if(err){
               console.log(err);
             } else {
-              console.log('hello');
               foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(req.params.bookid), 1);
               foundUser.save();
           res.redirect('/user/' + req.params.userid);

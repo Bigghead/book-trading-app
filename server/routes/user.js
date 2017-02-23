@@ -38,6 +38,23 @@ var bookSearchOptions = {
    });
  });
 
+ router.post('/user/:id/user-profile/edit', function(req, res){
+   const userData = req.body;
+   User.findById(req.params.id, function(err, foundUser){
+     if(err){
+       res.send(err);
+     } else {
+       foundUser.settings.name = userData.name;
+       foundUser.settings.city = userData.city;
+       foundUser.settings.state = userData.state;
+
+       foundUser.save().then(function(foundUser){
+         res.redirect('/user/' + foundUser._id + '/user-profile');
+       });
+     }
+   })
+ })
+
 router.get('/user/:id', function(req, res){
   var id = req.params.id;
   User.findById(id).populate('booksOwned').exec(function(err, foundUser){

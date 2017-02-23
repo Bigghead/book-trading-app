@@ -1,22 +1,22 @@
 <% include partials/header.ejs %>
 
 <div class="row">
-   <form class="col s12 ">
+   <form class="col s12" method="POST" action="/user/<%= foundUser._id%>/user-profile/edit">
       <div class="row ">
       <div class="input-field col l6 offset-l3 s12">
-        <input id="first_name" type="text" class="validate">
+        <input id="first_name" type="text" class="validate"  value="<%= foundUser.settings.name%>" name="name">
         <label for="first_name">Name</label>
       </div>
     </div>
     <div class="row">
       <div class="input-field col l6 offset-l3 s12">
-        <input id="city" type="text" class="validate">
+        <input id="city" type="text" class="validate" value="<%= foundUser.settings.city%>" name="city">
         <label for="city">City</label>
       </div>
     </div>
     <div class="row">
       <div class="input-field col l6 offset-l3 s12">
-        <input id="state" type="text" class="validate">
+        <input id="state" type="text" class="validate" value="<%= foundUser.settings.state%>" name="state">
         <label for="state">State</label>
       </div>
     </div>

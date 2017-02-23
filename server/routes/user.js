@@ -16,6 +16,18 @@ var bookSearchOptions = {
    lang: 'en'
  };
 
+ //==============PROFILE PAGE ==============
+
+ router.get('/user/:id/user-profile', function(req, res){
+   User.findById(req.params.id, function(err, foundUser){
+     if(err){
+       res.send(err);
+     } else {
+       res.render('userProfile', { foundUser : foundUser });
+     }
+   });
+ });
+
 router.get('/user/:id', function(req, res){
   var id = req.params.id;
   User.findById(id).populate('booksOwned').exec(function(err, foundUser){
@@ -79,5 +91,7 @@ router.get('/user/:userid/:bookid', function(req, res){
     }
   });
 });
+
+
 
 module.exports = router;

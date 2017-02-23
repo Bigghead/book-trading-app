@@ -21,10 +21,10 @@
           <li><a href="/login">Log In or Register</a></li>
         <%  } else { %>
           <% if(currentUser.peopleWantingToTrade.length > 0){  %>
-            <li><a href=""><%= currentUser.username %></a></li>
+            <li><a href="/user/<%= currentUser._id %>/user-profile"><%= currentUser.username %></a></li>
             <li><a href='/tradeRequest'>Trades: <span class='new badge'><%= currentUser.peopleWantingToTrade.length %></span></a></li>
           <% } else {  %>
-          <li><a href="/#a"><%= currentUser.username %></a></li>
+          <li><a href="/user/<%= currentUser._id %>/user-profile"><%= currentUser.username %></a></li>
             <%  }  %>
                 <li><a href="/user/<%= currentUser._id %>">My Books</a></li>
           <li><a href="/books">All Books</a></li>

@@ -195,9 +195,12 @@ app.get('/tradeRequest', function(req, res){
   });
 });
 
+
+
+//==========IF THEY ACCEP YOUR TRADE==================
 app.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', function(req, res){
 
-  var done = false;
+  const done = false;
   RequestedTrade.findByIdAndRemove(req.params.tradeid, function(err, foundTrade){
     if(err){
       console.log(err);

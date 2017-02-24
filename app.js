@@ -151,7 +151,7 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
                         if(err){
                           console.log(err);
                         }  else {
-                            tradingUser.userTrade.push(madeUserTrade);
+                            tradingUser.userTrade.push(tradingBook._id);
                             tradingUser.save()
                             .then(function(){
 		                            requestedUser.peopleWantingToTrade.push(madeRequestedTrade);

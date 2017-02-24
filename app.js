@@ -229,6 +229,7 @@ app.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', function(req, re
                   //take out  user's book, push the requesting user's book in
                   foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(foundTrade.theirBookID), 1);
                   foundUser.booksOwned.push(foundTrade.userBookID);
+                  foundUser.userTrade.splice(foundUser.userTrade.indexOf(foundTrade.userBookID), 1);
                   foundUser.save();
 
 

@@ -5,8 +5,7 @@ var requested = new mongoose.Schema({
   theirBook: String,
   theirBookID: mongoose.Schema.Types.ObjectId,
   userBook : String,
-  userBookID: mongoose.Schema.Types.ObjectId,
-  otherUserTradeID : mongoose.Schema.Types.ObjectId
+  userBookID: mongoose.Schema.Types.ObjectId
 });
 
 var RequestedTrade = mongoose.model('Requestedtrade', requested);

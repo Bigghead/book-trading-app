@@ -139,23 +139,13 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
                 } else {
 
                   //tradingUser.booksOwned.splice(tradingUser.booksOwned.indexOf(tradingBook._id), 1);
-                  UserTrade.create({
-                    userBook: tradingBook.bookName,
-                    userBookID: tradingBook._id,
-                    requestedBook: requestedBook.bookName,
-                    requestedBookID: requestedBook._id,
-                    accepted: false
-                  }, function(err, madeUserTrade){
-                    if(err){
-                      console.log(err);
-                    } else {
+
                       RequestedTrade.create({
                         theirID : tradingUser._id,
                         theirBook: tradingBook.bookName,
                         theirBookID: tradingBook._id,
                         userBook : requestedBook.bookName,
-                        userBookID: requestedBook._id,
-                        otherUserTradeID : madeUserTrade._id
+                        userBookID: requestedBook._id
 
                       }, function(err, madeRequestedTrade){
                         if(err){
@@ -171,18 +161,16 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
 			                            res.redirect('/books');
                               });
                             }
-                          });
+                          }); //end create
                         }
-                      });
-                    }
-                  });
-                }
-              });
-            }
-          });
-        }
+                    }); //end second user.find
+                  }
+                }); //end first user.find
+              }
+            }); //second books.find
+          }
+        }); //first books.find
     });
-});
 
 
 app.get('/tradeRequest', function(req, res){

@@ -13,17 +13,14 @@ var userSchema = new mongoose.Schema({
       ref : 'Book'
     }
   ],
-  userTrade:[
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref : 'Usertrade'
-    }
-  ],
   peopleWantingToTrade:[
     {
       type: mongoose.Schema.Types.ObjectId,
       ref : 'Requestedtrade'
     }
+  ],
+  userTrade : [
+    
   ]
 });
 

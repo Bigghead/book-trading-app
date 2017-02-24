@@ -22,7 +22,7 @@
         <%  } else { %>
           <% if(currentUser.peopleWantingToTrade.length > 0){  %>
             <li><a href="/user/<%= currentUser._id %>/user-profile"><%= currentUser.username %></a></li>
-            <li><a href='/tradeRequest'>Trades: <span class='new badge'><%= currentUser.peopleWantingToTrade.length %></span></a></li>
+            <li><a href='/tradeRequest'>Trade Requests: <span class='new badge'><%= currentUser.peopleWantingToTrade.length %></span></a></li>
           <% } else {  %>
           <li><a href="/user/<%= currentUser._id %>/user-profile"><%= currentUser.username %></a></li>
             <%  }  %>

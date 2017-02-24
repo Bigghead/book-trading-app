@@ -1,17 +1,6 @@
 <% include partials/header %>
 
-<% if(currentUser){  %>
-  <div class="container">
-    <div class="row center-align">
-      <div class="col l6">
-        <a class="waves-effect waves-light btn blue" href="/tradeRequest">Trade Requests: <%= currentUser.peopleWantingToTrade.length %></a>
-      </div>
-      <div class="col l6">
-        <a class="waves-effect waves-light btn green" href="#a">Pending Trades: <%= currentUser.userTrade.length %></a>
-      </div>
-    </div>
-  </div>
-<%  }  %>
+
 
 <div class="container">
   <h2 class='center-align'>Book Collection</h2>

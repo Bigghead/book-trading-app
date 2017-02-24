@@ -35,14 +35,12 @@
                <%  }); %>
 
             <%  } else { %>
-              <%  currentUser.booksOwned.forEach(function(book){  %>
-                  <%  currentUser.userTrade.forEach(function(trade){  %>
-                    <% console.log(trade.toString() !== book._id.toString()); %>
-                    <% if(trade.toString() !== book._id.toString()){ %>
+
+                  <%  currentUser.booksOwned.forEach(function(book){  %>
+                    <% if(currentUser.userTrade.indexOf(book._id.toString()) === -1){ %>
                       <option value="<%= book._id %>" > <%= book.bookName %> </option>
                       <%  }  %>
                   <%  });  %>
-              <%  });  %>
           <%  } %>
 
             </select>

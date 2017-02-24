@@ -37,7 +37,8 @@
             <%  } else { %>
               <%  currentUser.booksOwned.forEach(function(book){  %>
                   <%  currentUser.userTrade.forEach(function(trade){  %>
-                    <% if(trade.userBookID.toString() !== book._id.toString()){ %>
+                    <% console.log(trade.toString() !== book._id.toString()); %>
+                    <% if(trade.toString() !== book._id.toString()){ %>
                       <option value="<%= book._id %>" > <%= book.bookName %> </option>
                       <%  }  %>
                   <%  });  %>

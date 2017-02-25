@@ -117,7 +117,7 @@ app.get('/', function(req, res){
 
 //===============TRADE ROUTE======
 app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
-  var done = false;
+  const done = false;
 
   Books.findById(req.body.book, function(err, tradingBook){
     if(err){
@@ -165,12 +165,12 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
                         }
                     }); //end second user.find
                   }
-                }); //end first user.find
-              }
-            }); //second books.find
-          }
-        }); //first books.find
-    });
+              }); //end first user.find
+            }
+         }); //second books.find
+       }
+    }); //first books.find
+});
 
 
 app.get('/tradeRequest', function(req, res){
@@ -185,7 +185,7 @@ app.get('/tradeRequest', function(req, res){
 
 
 
-//==========IF THEY ACCEP YOUR TRADE==================
+//==========IF THEY ACCEPT YOUR TRADE==================
 app.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', function(req, res){
 
   const done = false;
@@ -200,17 +200,16 @@ app.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', function(req, re
         } else {
 
 
-          User.findById(req.user._id, function(err, requestingUser){
+          User.findById(req.user._id, function(err, requestedUser){
             if(err){
               console.log(err);
             } else {
 
               //take out requesting user's book, push the other user's book in
-              requestingUser.booksOwned.splice(requestingUser.booksOwned.indexOf(foundTrade.userBookID), 1);
-              requestingUser.booksOwned.push(foundTrade.theirBookID);
-              requestingUser.peopleWantingToTrade.splice(requestingUser.peopleWantingToTrade.indexOf(req.params.tradeid), 1);
-
-              requestingUser.save()
+              requestedUser.booksOwned.splice(requestedUser.booksOwned.indexOf(foundTrade.userBookID), 1);
+              requestedUser.booksOwned.push(foundTrade.theirBookID);
+              requestedUser.peopleWantingToTrade.splice(requestedUser.peopleWantingToTrade.indexOf(req.params.tradeid), 1);
+              requestedUser.save()
 
               User.findById(foundTrade.theirID, function(err, foundUser){
                 if(err){
@@ -227,23 +226,16 @@ app.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', function(req, re
                   //NEED to clear this foundUser's userTrade, get rid of this trade, and re-push his book id back into his booksOwned
 
                   return new Promise(function(resolve, reject){
-                    foundUser.userTrade.forEach(function(userTrade){
-                      console.log(userTrade._id);
-                      console.log(foundTrade.otherUserTradeID);
-                    // if(userTrade._id.toString() === foundTrade.otherUserTradeID.toString()){
-                    //   foundUser.userTrade.splice(foundUser.userTrade.indexOf(userTrade), 1);
-                    // }
-                  });
                   resolve(foundUser);
                   })
 
 
                   //Change the corresponding books' owners because we're hitting
                   //a route that depends on the book's owner later. Want it to be
-                  //different every time, otherwise we're asking trading one user for a book they already own later
+                  //different every time, otherwise we're asking one user for a book they already own
                   .then(function(){
                     Books.findByIdAndUpdate(req.params.requestedBookId,{
-                      ownedBy : requestingUser._id
+                      ownedBy : requestedUser._id
                     }).exec()
                       .then(function(){
                         Books.findByIdAndUpdate(req.params.askerBookId,{

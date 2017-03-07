@@ -20,7 +20,10 @@ var userSchema = new mongoose.Schema({
     }
   ],
   userTrade : [
-    
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref : 'Usertrade'
+    }
   ]
 });
 

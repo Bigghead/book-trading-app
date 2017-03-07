@@ -11,6 +11,7 @@ var express        = require('express'),
 
 //=====mongoose connect
 mongoose.Promise = global.Promise;
+mongoose.set('debug', true)
 mongoose.connect(keys.mLab);
 
 //======Model Requires=====
@@ -151,15 +152,30 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
                         if(err){
                           console.log(err);
                         }  else {
-                            tradingUser.userTrade.push(tradingBook._id);
-                            tradingUser.save()
-                            .then(function(){
-		                            requestedUser.peopleWantingToTrade.push(madeRequestedTrade);
-		                            requestedUser.save();
-                              })
-		                        .then(function(){
-			                            res.redirect('/books');
-                              });
+
+                          UserTrade.create({
+                            userBook: tradingBook.bookName,
+                            userBookID: tradingUser._id,
+                            requestedBook: requestedBook.bookName,
+                            requestedBookID: requestedBook._id,
+                            accepted: false
+
+                          }, function(err, madeUserTrade){
+                            if(err){
+                              console.log(err);
+                            } else {
+                              tradingUser.userTrade.push(madeUserTrade);
+                              tradingUser.save()
+                              .then(function(){
+                                  requestedUser.peopleWantingToTrade.push(madeRequestedTrade);
+                                  console.log(tradingUser);
+                                  requestedUser.save();
+                                })
+                              .then(function(){
+                                    res.redirect('/books');
+                                });
+                              }
+                            });  //end madeUserTrade
                             }
                           }); //end create
                         }
@@ -264,6 +280,19 @@ app.get('/auth/callback',
   });
 
 
+
+
+
+app.get('/testing', function(req, res){
+  User.findById(req.user._id).populate('userTrade').exec(function(err, foundUser){
+    if(err){
+      console.log(err);
+    } else {
+      console.log('Success: ' + foundUser);
+      res.json(foundUser);
+    }
+  });
+})
 
 app.listen('9000', function(){
   console.log('Book Trading App Live!');

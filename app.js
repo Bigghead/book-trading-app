@@ -282,6 +282,14 @@ app.get('/auth/callback',
 
 
 
+app.get('/user-trades', ((req, res) => {
+  User.findById(req.user._id).populate('userTrade').exec((err, foundUser) => {
+    if(err) console.log(err);
+    console.log(foundUser);
+    res.render('userTrade', { pendingTrades: foundUser.userTrade});
+  });
+}));
+
 
 app.get('/testing', function(req, res){
   User.findById(req.user._id).populate('userTrade').exec(function(err, foundUser){

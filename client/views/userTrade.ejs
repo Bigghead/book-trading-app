@@ -2,8 +2,37 @@
 
 <% console.log(pendingTrades); %>
 
-<% pendingTrades.forEach(function(trade){%>
-  <h1><%= trade.userBook %></h1>
-<%});%>
+<div class="container">
+  <h1>Your Trades</h1>
+  <div class="row">
+    <div class="col s12">
+      <table class='highlight'>
+         <thead>
+           <tr>
+             <th>Trading</th>
+             <th>for</th>
+             <th>Their</th>
+           </tr>
+         </thead>
+         <tbody>
+
+            <% pendingTrades.forEach(function(trade){ %>
+            <%  console.log(trade);%>
+              <tr class='blackText'>
+                <td><%= trade.userBook %></td>
+                <td>For</td>
+                <td><%= trade.requestedBook %></td>
+                <td>
+                 <a href='/cancel-trades' class='btn btn-large waves-effect waves-light red'>Cancel</a>
+                </td>
+              </tr>
+            <%  }) %>
+
+         </tbody>
+
+      </table>
+    </div>
+  </div>
+</div>
 
 <% include partials/footer %>

@@ -155,9 +155,10 @@ app.post("/books/trade/:bookOwner/:theirBookid/:yourid", function(req, res){
 
                           UserTrade.create({
                             userBook: tradingBook.bookName,
-                            userBookID: tradingUser._id,
+                            userBookID: tradingBook._id,
                             requestedBook: requestedBook.bookName,
                             requestedBookID: requestedBook._id,
+                            requestedUserID: requestedUser._id,
                             accepted: false
 
                           }, function(err, madeUserTrade){
@@ -287,6 +288,15 @@ app.get('/user-trades', ((req, res) => {
     if(err) console.log(err);
     console.log(foundUser);
     res.render('userTrade', { pendingTrades: foundUser.userTrade});
+  });
+}));
+
+app.get('/cancel-trades/:tradeId', ((req, res) => {
+  const tradeId = req.params.tradeId;
+  User.findById(req.user._id, function(err, foundUser){
+    if(err) console.log(err);
+    foundUser.userTrade.splice(foundUser.userTrade.indexOf(tradeId), 1);
+    foundUser.save().then((user) => res.send(user));
   });
 }));
 

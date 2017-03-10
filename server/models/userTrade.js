@@ -5,6 +5,7 @@ var userTradeSchema = new mongoose.Schema({
    userBookID: mongoose.Schema.Types.ObjectId,
    requestedBook: String,
    requestedBookID: mongoose.Schema.Types.ObjectId,
+   requestedUserID: mongoose.Schema.Types.ObjectId,
    accepted: Boolean
  });
 

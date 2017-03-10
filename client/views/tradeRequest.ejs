@@ -24,7 +24,7 @@
                  <a href='/tradeRequest/<%= eachTrade._id %>/<%= eachTrade.theirBookID %>/<%= eachTrade.userBookID%>' class='btn btn-large waves-effect waves-light blue'>Accept</a>
                 </td>
                 <td>
-                 <a href='#a' class='btn btn-large waves-effect waves-light red'>Reject</a>
+                 <a href='/rejectTrade/<%= eachTrade._id %>/<%= eachTrade.theirBookID %>/<%= eachTrade.userBookID%>' class='btn btn-large waves-effect waves-light red'>Reject</a>
                 </td>
               </tr>
             <%  }) %>

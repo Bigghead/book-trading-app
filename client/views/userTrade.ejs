@@ -23,7 +23,7 @@
                 <td>For</td>
                 <td><%= trade.requestedBook %></td>
                 <td>
-                 <a href='/cancel-trades' class='btn btn-large waves-effect waves-light red'>Cancel</a>
+                 <a href='/cancel-trades/<%= trade._id %>' class='btn btn-large waves-effect waves-light red'>Cancel</a>
                 </td>
               </tr>
             <%  }) %>

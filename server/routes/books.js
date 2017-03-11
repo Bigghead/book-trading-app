@@ -19,7 +19,7 @@ router.get('/books/:bookid', function(req, res){
     if(err){
     console.log(err);
   } else {
-    User.findById(req.user._id).populate('booksOwned').exec(function(err, foundUser){
+    User.findById(req.user._id).populate('booksOwned').populate('userTrade').exec(function(err, foundUser){
       if(err){
         console.log(err);
       } else {

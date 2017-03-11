@@ -293,11 +293,19 @@ app.get('/user-trades', ((req, res) => {
 
 app.get('/cancel-trades/:tradeId', ((req, res) => {
   const tradeId = req.params.tradeId;
-  User.findById(req.user._id, function(err, foundUser){
+  User.findById(req.user._id).populate('userTrade').exec(function(err, foundUser){
     if(err) console.log(err);
-    foundUser.userTrade.splice(foundUser.userTrade.indexOf(tradeId), 1);
-    foundUser.save().then((user) => res.send(user));
+    const userTrade = foundUser.userTrade;
+    console.log(userTrade);
+    User.findById(userTrade.requestedBookId, function(err, requestedUser){
+      if(err) console.log(err);
+      console.log(requestedUser);
+    })
   });
+    //foundUser.userTrade.splice(foundUser.userTrade.indexOf(tradeId), 1);
+    // console.log(foundUser.userTrade);
+    //foundUser.save().then((user) => res.send(user));
+
 }));
 
 

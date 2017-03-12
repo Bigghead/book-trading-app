@@ -202,7 +202,7 @@ app.get('/tradeRequest', function(req, res){
 
 
 
-//==========IF THEY ACCEPT YOUR TRADE==================
+// ==========IF THEY ACCEPT YOUR TRADE==================
 app.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', function(req, res){
 
   const done = false;
@@ -236,7 +236,7 @@ app.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', function(req, re
                   //take out  user's book, push the requesting user's book in
                   foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(foundTrade.theirBookID), 1);
                   foundUser.booksOwned.push(foundTrade.userBookID);
-                  foundUser.userTrade.splice(foundUser.userTrade.indexOf(foundTrade.userBookID), 1);
+                  foundUser.userTrade.splice(foundUser.userTrade.indexOf(foundTrade.otherUserTradeID), 1);
                   foundUser.save();
 
 
@@ -273,6 +273,34 @@ app.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', function(req, re
   });
 });
 
+
+// ==========IF THEY DENY YOUR TRADE==================
+app.get('/rejectTrade/:tradeid/:requestedBookId/:askerBookId', function(req, res){
+  RequestedTrade.findByIdAndRemove(req.params.tradeid, function(err, foundTrade){
+    if(err) console.log(err);
+    UserTrade.findByIdAndRemove(foundTrade.otherUserTradeID, function(err, foundUserTrade){
+      if(err) console.log(err);
+      //Logged In User
+      User.findById(req.user._id, function(err, requestedUser){
+        if(err) console.log(err);
+        requestedUser.peopleWantingToTrade.splice(requestedUser.peopleWantingToTrade.indexOf(req.params.tradeid), 1);
+        requestedUser.save();
+
+        //Other User that is requesting for your book
+        User.findById(foundTrade.theirID, function(err, foundOtherUser){
+          if(err) console.log(err);
+          foundOtherUser.userTrade.splice(foundOtherUser.userTrade.indexOf(foundTrade.otherUserTradeID), 1);
+          foundOtherUser.save()
+            .then(function(){
+              res.redirect('/tradeRequest');
+            });
+        })
+      });
+    })
+  })
+});
+
+
 // Perform the final stage of authentication and redirect to '/user'
 app.get('/auth/callback',
   passport.authenticate('auth0', { failureRedirect: '/login' }),
@@ -294,13 +322,16 @@ app.get('/user-trades', ((req, res) => {
 app.get('/cancel-trades/:tradeId', ((req, res) => {
   const tradeId = req.params.tradeId;
   User.findById(req.user._id).populate('userTrade').exec(function(err, foundUser){
-    if(err) console.log(err);
+    if(err) {
+      console.log(err);
+    } else {
     const userTrade = foundUser.userTrade;
-    console.log(userTrade);
-    User.findById(userTrade.requestedBookId, function(err, requestedUser){
+    console.log(userTrade[0]);
+    User.findById(userTrade[0].requestedUserID, function(err, requestedUser){
       if(err) console.log(err);
       console.log(requestedUser);
-    })
+    });
+  }
   });
     //foundUser.userTrade.splice(foundUser.userTrade.indexOf(tradeId), 1);
     // console.log(foundUser.userTrade);

@@ -3,6 +3,15 @@ var express = require('express'),
     Books   = require('../models/bookSchema.js'),
     User    = require('../models/userSchema.js');
 
+
+function isLoggedIn(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  } else {
+    res.redirect('/books');
+  }
+}
+
 router.get('/books', function(req, res){
   Books.find({}, function(err, foundBooks){
     if(err){
@@ -14,7 +23,7 @@ router.get('/books', function(req, res){
 });
 
 //=========SHOW ONE route ========
-router.get('/books/:bookid', function(req, res){
+router.get('/books/:bookid',isLoggedIn, function(req, res){
   Books.findById(req.params.bookid, function(err, foundBook){
     if(err){
     console.log(err);

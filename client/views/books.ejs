@@ -20,15 +20,10 @@
       <div class="col  l4 m6 s12 center-align books-container">
       <h5 class='limit'><%= book.bookName %></h5>
       <img src=<%= book.picture %> class='book-image'>
-
-
       <% if(currentUser && book.ownedBy.toString() !== currentUser._id.toString()){ %>
         <div>
           <a class="waves-effect waves-light btn" href="/books/<%= book._id %>">Request A Trade</a>
         </div>
-
-
-
         <%  }  %>
           </div>
         <%  })  %>

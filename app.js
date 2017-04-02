@@ -6,7 +6,7 @@ var express        = require('express'),
     ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn(),
     bookSearch     = require('google-books-search'),
     Session        = require('express-session'),
-    MongoStore     = require('connect-mongo')(session),
+    MongoStore     = require('connect-mongo')(Session),
     //keys           = require('./keys');
     app            = express();
 

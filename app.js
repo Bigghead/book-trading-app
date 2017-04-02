@@ -1,6 +1,8 @@
 var express        = require('express'),
     mongoose       = require('mongoose'),
     bodyParser     = require('body-parser'),
+    expressSanitizer = require('express-sanitizer'),
+    helmet         = require('helmet'),
     passport       = require('passport'),
     Auth0Strategy  = require('passport-auth0'),
     ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn(),
@@ -34,6 +36,9 @@ app.set('views',__dirname+'/client/views');
 app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(expressSanitizer());
+app.use(helmet.xssFilter());
+
 app.use(Session({
   secret: 'This is Sparta Again',
   resave :false,

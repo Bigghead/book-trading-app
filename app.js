@@ -6,6 +6,7 @@ var express        = require('express'),
     ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn(),
     bookSearch     = require('google-books-search'),
     Session        = require('express-session'),
+    MongoStore     = require('connect-mongo')(session),
     keys           = require('./keys');
     app            = express();
 
@@ -35,7 +36,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(Session({
   secret: 'This is Sparta Again',
   resave :false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 
 // This can be used to keep a smaller payload

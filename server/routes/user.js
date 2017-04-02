@@ -44,9 +44,9 @@ var bookSearchOptions = {
      if(err){
        res.send(err);
      } else {
-       foundUser.settings.name = userData.name;
-       foundUser.settings.city = userData.city;
-       foundUser.settings.state = userData.state;
+       foundUser.settings.name = req.sanitize(userData.name);
+       foundUser.settings.city = req.sanitize(userData.city);
+       foundUser.settings.state = req.sanitize(userData.state);
 
        foundUser.save().then(function(foundUser){
          res.redirect(`/user/${foundUser._id}/user-profile`);

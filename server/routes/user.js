@@ -3,11 +3,11 @@ var express = require('express'),
     User    = require('../models/userSchema.js'),
     Books   = require('../models/bookSchema.js'),
     bookSearch     = require('google-books-search'),
-    keys    = require('../../keys');
+    //keys    = require('../../keys');
 
 
 var bookSearchOptions = {
-   key: keys.googleBooksApi,
+   key: process.env.googleBookApi,
    field: 'title',
    offset: 0,
    limit: 3,

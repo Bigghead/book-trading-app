@@ -1,7 +1,7 @@
 const express = require('express');
 const Books   = require('../models/bookSchema.js');
 const User    = require('../models/userSchema.js');
-const RequestedTrade = require('../models/RequestedTrade.js');
+const RequestedTrade = require('../models/requestedTrade.js');
 const UserTrade      = require('../models/userTrade.js');
 const router  = express.Router();
 

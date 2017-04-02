@@ -7,19 +7,19 @@ var express        = require('express'),
     bookSearch     = require('google-books-search'),
     Session        = require('express-session'),
     MongoStore     = require('connect-mongo')(session),
-    keys           = require('./keys');
+    //keys           = require('./keys');
     app            = express();
 
 //=====mongoose connect
 mongoose.Promise = global.Promise;
 mongoose.set('debug', true)
-mongoose.connect(keys.mLab);
+mongoose.connect(process.env.mlab);
 
 //======Model Requires=====
 var Books          = require('./server/models/bookSchema.js'),
     User           = require('./server/models/userSchema.js'),
     UserTrade      = require('./server/models/userTrade.js'),
-    RequestedTrade = require('./server/models/RequestedTrade.js');
+    RequestedTrade = require('./server/models/requestedTrade.js');
 
 
 //======ROUTES REQUIRES======
@@ -55,10 +55,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 // Configure Passport to use Auth0
 var strategy = new Auth0Strategy({
-    domain:       process.env.AUTH0_DOMAIN || keys.auth0Domain,
-    clientID:     process.env.AUTH0_CLIENT_ID || keys.auth0Client,
-    clientSecret: process.env.AUTH0_CLIENT_SECRET || keys.auth0Secret,
-    callbackURL:  process.env.AUTH0_CALLBACK_URL || 'http://localhost:9000/auth/callback'
+    domain:       process.env.auth0Domain || keys.auth0Domain,
+    clientID:     process.env.auth0Client || keys.auth0Client,
+    clientSecret: process.env.auth0Secret || keys.auth0Secret,
+    callbackURL:  'https://lychee-pie-43109.herokuapp.com/auth/callback'
   }, function(accessToken, refreshToken, extraParams, profile, done) {
     // accessToken is the token to call Auth0 API (not needed in the most cases)
     // extraParams.id_token has the JSON Web Token

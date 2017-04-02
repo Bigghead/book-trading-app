@@ -2,7 +2,7 @@ var express = require('express'),
     router  = express.Router(),
     User    = require('../models/userSchema.js'),
     Books   = require('../models/bookSchema.js'),
-    bookSearch     = require('google-books-search'),
+    bookSearch     = require('google-books-search');
     //keys    = require('../../keys');
 
 

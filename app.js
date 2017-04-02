@@ -8,6 +8,7 @@ var express        = require('express'),
     Session        = require('express-session'),
     MongoStore     = require('connect-mongo')(Session),
     //keys           = require('./keys');
+    port           = process.env.PORT || 9000,
     app            = express();
 
 //=====mongoose connect
@@ -112,6 +113,6 @@ app.get('/', function(req, res){
 });
 
 
-app.listen('9000', function(){
+app.listen(port, function(){
   console.log('Book Trading App Live!');
 });

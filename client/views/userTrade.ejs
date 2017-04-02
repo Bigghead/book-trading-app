@@ -1,6 +1,5 @@
 <% include partials/header %>
 
-<% console.log(pendingTrades); %>
 
 <div class="container">
   <h1>Your Trades</h1>
@@ -17,13 +16,12 @@
          <tbody>
 
             <% pendingTrades.forEach(function(trade){ %>
-            <%  console.log(trade);%>
               <tr class='blackText'>
                 <td><%= trade.userBook %></td>
                 <td>For</td>
                 <td><%= trade.requestedBook %></td>
                 <td>
-                 <a href='/cancel-trades/<%= trade._id %>' class='btn btn-large waves-effect waves-light red'>Cancel</a>
+                 <a href='/cancel-trades/<%= trade.userBookID %>' class='btn btn-large waves-effect waves-light red'>Cancel</a>
                 </td>
               </tr>
             <%  }) %>

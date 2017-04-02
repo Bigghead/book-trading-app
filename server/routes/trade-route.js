@@ -2,7 +2,7 @@ const express = require('express');
 const Books   = require('../models/bookSchema.js');
 const User    = require('../models/userSchema.js');
 const RequestedTrade = require('../models/RequestedTrade.js');
-const UserTrade      = require('../models/userTrade.js'),
+const UserTrade      = require('../models/userTrade.js');
 const router  = express.Router();
 
 
@@ -202,28 +202,40 @@ router.get('/rejectTrade/:tradeid/:requestedBookId/:askerBookId', isLoggedIn, fu
 router.get('/user-trades', isLoggedIn, ((req, res) => {
   User.findById(req.user._id).populate('userTrade').exec((err, foundUser) => {
     if(err) console.log(err);
-    console.log(foundUser);
     res.render('userTrade', { pendingTrades: foundUser.userTrade});
   });
 }));
 
-router.get('/cancel-trades/:tradeId', isLoggedIn, ((req, res) => {
-  const tradeId = req.params.tradeId;
-  User.findById(req.user._id).populate('userTrade').exec(function(err, foundUser){
-    if(err) {
-      console.log(err);
-    } else {
-    const userTrade = foundUser.userTrade;
-    console.log(userTrade[0]);
-    User.findById(userTrade[0].requestedUserID, function(err, requestedUser){
-      if(err) console.log(err);
-      console.log(requestedUser);
+router.get('/cancel-trades/:bookID', isLoggedIn, ((req, res) => {
+  const bookID = req.params.bookID;
+  User.findById(req.user._id).populate('userTrade')
+    .exec()
+    .then((user) => {
+        const userTrade = user.userTrade;
+        userTrade.forEach(trade => {
+            if(trade.userBookID.toString() === bookID){
+                const otherUserID = trade.requestedUserID;
+                userTrade.splice(userTrade.indexOf(trade), 1);
+                user.save()
+
+                return User.findById(otherUserID).populate('peopleWantingToTrade').exec()
+                        .then(otherUser => {
+                            console.log(otherUser);
+                            const reqTrade = otherUser.peopleWantingToTrade;
+                            reqTrade.forEach(requested => {
+                                if(requested.theirBookID.toString() === bookID){
+                                    reqTrade.splice(reqTrade.indexOf(requested), 1);
+                                    otherUser.save()
+
+                                    .then(() => {
+                                        res.redirect('/books');
+                                    })
+                                }
+                            })
+                        });
+            }
+        }); 
     });
-  }
-  });
-    //foundUser.userTrade.splice(foundUser.userTrade.indexOf(tradeId), 1);
-    // console.log(foundUser.userTrade);
-    //foundUser.save().then((user) => res.send(user));
 
 }));
 

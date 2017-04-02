@@ -18,7 +18,7 @@
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <% if(!currentUser){ %>
           <li><a href="/books">All Books</a></li>
-          <li><a href="/login">Log In or Register</a></li>
+          <li><a href="/auth/callback">Log In or Register</a></li>
         <%  } else { %>
           <% if(currentUser.peopleWantingToTrade.length > 0){  %>
             <li><a href="/user/<%= currentUser._id %>/user-profile"><%= currentUser.username %></a></li>

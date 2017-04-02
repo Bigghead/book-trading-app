@@ -37,7 +37,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(expressSanitizer());
-app.use(helmet.xssFilter());
+app.use(helmet());
 
 app.use(Session({
   secret: 'This is Sparta Again',

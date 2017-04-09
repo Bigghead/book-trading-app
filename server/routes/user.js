@@ -5,6 +5,13 @@ var express = require('express'),
     bookSearch     = require('google-books-search');
     //keys    = require('../../keys');
 
+function isLoggedIn(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  } else {
+    res.redirect('/');
+  }
+}
 
 var bookSearchOptions = {
    key: process.env.googleBookApi,
@@ -18,7 +25,7 @@ var bookSearchOptions = {
 
  //==============PROFILE PAGE ==============
 
- router.get('/user/:id/user-profile', function(req, res){
+ router.get('/user/:id/user-profile', isLoggedIn, function(req, res){
    User.findById(req.params.id, function(err, foundUser){
      if(err){
        res.send(err);
@@ -28,7 +35,7 @@ var bookSearchOptions = {
    });
  });
 
- router.get('/user/:id/user-profile/edit', function(req, res){
+ router.get('/user/:id/user-profile/edit', isLoggedIn, function(req, res){
    User.findById(req.params.id, function(err, foundUser){
      if(err){
        res.send(err);
@@ -38,7 +45,7 @@ var bookSearchOptions = {
    });
  });
 
- router.post('/user/:id/user-profile/edit', function(req, res){
+ router.post('/user/:id/user-profile/edit', isLoggedIn, function(req, res){
    const userData = req.body;
    User.findById(req.params.id, function(err, foundUser){
      if(err){
@@ -65,7 +72,7 @@ router.get('/user/:id', function(req, res){
 
 
 //=============ADD A BOOK =============
-router.post('/user/:id', function(req, res){
+router.post('/user/:id', isLoggedIn, function(req, res){
 
   bookSearch.search(req.body.newBook, function(err, results){
     if(err){
@@ -98,7 +105,7 @@ router.post('/user/:id', function(req, res){
 });
 
 //==========DELETE A BOOK=======
-router.get('/user/:userid/:bookid', function(req, res){
+router.get('/user/:userid/:bookid', isLoggedIn, function(req, res){
       Books.findByIdAndRemove(req.params.bookid, function(err, success){
         if(err){
           console.log(err)

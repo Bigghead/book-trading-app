@@ -15,7 +15,7 @@ var express        = require('express'),
 
 //=====mongoose connect
 mongoose.Promise = global.Promise;
-mongoose.set('debug', true)
+//mongoose.set('debug', true)
 mongoose.connect(process.env.mlab || keys.mLab);
 
 //======Model Requires=====

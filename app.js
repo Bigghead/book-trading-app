@@ -16,7 +16,7 @@ var express        = require('express'),
 //=====mongoose connect
 mongoose.Promise = global.Promise;
 mongoose.set('debug', true)
-mongoose.connect(process.env.mlab);
+mongoose.connect(process.env.mlab || keys.mLab);
 
 //======Model Requires=====
 var Books          = require('./server/models/bookSchema.js'),

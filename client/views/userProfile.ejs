@@ -1,15 +1,18 @@
 <% include partials/header.ejs %>
 
-<div class="container">
-  <h1><%= foundUser.userName%></h1>
+<div class="container center-align">
+  
+  <h1>Your Profile</h1>
+  <hr>
   <ul>
-    <li><%= foundUser.settings.name%></li>
-    <li><%= foundUser.settings.city%></li>
-    <li><%= foundUser.settings.state%></li>
+    <li>Name: <%= foundUser.settings.name%></li>
+    <li>City: <%= foundUser.settings.city%></li>
+    <li>State: <%= foundUser.settings.state%></li>
 
   </ul>
+  <a href="/user/<%= foundUser._id%>/user-profile/edit" class='btn btn-primary'>Edit Settings</a>
+
 </div>
 
-<a href="/user/<%= foundUser._id%>/user-profile/edit" class='btn btn-primary'>Edit Settings</a>
 
 <% include partials/footer.ejs %>

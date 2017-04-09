@@ -1,36 +1,70 @@
 <html>
 
-  <head>
-    <link rel="stylesheet" type="text/css" href="/main.css" />
+<head>
+  <link rel="stylesheet" type="text/css" href="/main.css" />
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css">
 
   <script src="https://cdn.auth0.com/js/lock/10.9.1/lock.min.js"></script>
 
 
-  </head>
+</head>
 
-  <body>
-<%= console.log(currentUser); %>
+<body>
+  <%= console.log(currentUser); %>
     <nav>
-    <div class="nav-wrapper">
-      <a href="/" class="brand-logo">Book Trading</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <% if(!currentUser){ %>
-          <li><a href="/books">All Books</a></li>
-          <li><a href="/auth/callback">Log In or Register</a></li>
-        <%  } else { %>
-          <% if(currentUser.peopleWantingToTrade.length > 0){  %>
-            <li><a href="/user/<%= currentUser._id %>/user-profile"><%= currentUser.username %></a></li>
-            <li><a href='/tradeRequest'>Trade Requests: <span class='new badge'><%= currentUser.peopleWantingToTrade.length %></span></a></li>
-          <% } else {  %>
-          <li><a href="/user/<%= currentUser._id %>/user-profile"><%= currentUser.username %></a></li>
-            <%  }  %>
-                <li><a href="/user/<%= currentUser._id %>">My Books</a></li>
-          <li><a href="/books">All Books</a></li>
-          <li><a href="/logout">log Out</a></li>
-        <%  } %>
+      <div class="nav-wrapper">
+        <a href="/" class="brand-logo">Book Trading</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
 
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <% if(!currentUser){ %>
+            <li><a href="/books">All Books</a></li>
+            <li><a href="/auth/callback">Log In or Register</a></li>
+            <%  } else { %>
+              <% if(currentUser.peopleWantingToTrade.length > 0){  %>
+                <li>
+                  <a href="/user/<%= currentUser._id %>/user-profile">
+                    <%= currentUser.username %>
+                  </a>
+                </li>
+                <li><a href='/tradeRequest'>Trade Requests: <span class='new badge'><%= currentUser.peopleWantingToTrade.length %></span></a></li>
+                <% } else {  %>
+                  <li>
+                    <a href="/user/<%= currentUser._id %>/user-profile">
+                      <%= currentUser.username %>
+                    </a>
+                  </li>
+                  <%  }  %>
+                    <li><a href="/user/<%= currentUser._id %>">My Books</a></li>
+                    <li><a href="/books">All Books</a></li>
+                    <li><a href="/logout">log Out</a></li>
+                    <%  } %>
+
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+        <% if(!currentUser){ %>
+            <li><a href="/books">All Books</a></li>
+            <li><a href="/auth/callback">Log In or Register</a></li>
+            <%  } else { %>
+              <% if(currentUser.peopleWantingToTrade.length > 0){  %>
+                <li>
+                  <a href="/user/<%= currentUser._id %>/user-profile">
+                    <%= currentUser.username %>
+                  </a>
+                </li>
+                <li><a href='/tradeRequest'>Trade Requests: <span class='new badge'><%= currentUser.peopleWantingToTrade.length %></span></a></li>
+                <% } else {  %>
+                  <li>
+                    <a href="/user/<%= currentUser._id %>/user-profile">
+                      <%= currentUser.username %>
+                    </a>
+                  </li>
+                  <%  }  %>
+                    <li><a href="/user/<%= currentUser._id %>">My Books</a></li>
+                    <li><a href="/books">All Books</a></li>
+                    <li><a href="/logout">log Out</a></li>
+                    <%  } %>
       </ul>
-    </div>
-  </nav>
+      </div>
+    </nav>

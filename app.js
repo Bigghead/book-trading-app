@@ -9,7 +9,7 @@ var express        = require('express'),
     bookSearch     = require('google-books-search'),
     Session        = require('express-session'),
     MongoStore     = require('connect-mongo')(Session),
-    //keys           = require('./keys');
+    // keys           = require('./keys');
     port           = process.env.PORT || 9000,
     app            = express();
 
@@ -65,6 +65,7 @@ var strategy = new Auth0Strategy({
     clientID:     process.env.auth0Client || keys.auth0Client,
     clientSecret: process.env.auth0Secret || keys.auth0Secret,
     callbackURL:  'https://lychee-pie-43109.herokuapp.com/auth/callback'
+    // callbackURL: 'http://localhost:9000/auth/callback'
   }, function(accessToken, refreshToken, extraParams, profile, done) {
     // accessToken is the token to call Auth0 API (not needed in the most cases)
     // extraParams.id_token has the JSON Web Token

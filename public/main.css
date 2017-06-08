@@ -25,8 +25,12 @@ body{
   height: 300px;
 }
 
+.single-container{
+  margin: 10% auto;
+}
+
 .book-image{
-  height: 200px;
+  height: 2250px;
 }
 
 .limit {

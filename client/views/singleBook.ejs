@@ -1,30 +1,30 @@
 <% include partials/header.ejs %>
 
 
-<div class="container center-align">
-  <div class="row">
-    <div class="col l4">
-      <img src=<%= book.picture %> alt="" />
-    </div>
+  <div class="container center-align single-container">
+    <div class="row">
+      <div class="col l4 center-align">
+        <img src=<%=b ook.picture %> alt="" />
+      </div>
 
-    <div class="col-l8">
+      <div class="col-l8">
 
-      <h3>Description:</h3>
-      <p>
-        <%= book.description.slice(0, 250) + '...' %>
-      </p>
+        <h3>Description:</h3>
+        <p>
+          <%= book.description.slice(0, 300) + '...' %>
+        </p>
 
-      <!-- Modal Trigger -->
-      <a class="waves-effect waves-light btn red" href="#modal1">Trade</a>
+        <!-- Modal Trigger -->
+        <a class="waves-effect waves-light btn red" href="#modal1">Trade</a>
 
-      <!-- Modal Structure -->
+        <!-- Modal Structure -->
 
-      <div id="modal1" class="modal">
-        <div class="modal-content">
-          <h4 class='single-book-title'>Which Book Are You Trading?</h4>
-          <form action="/books/trade/<%= book.ownedBy %>/<%= book._id %>/<%= currentUser._id %>" method="post">
+        <div id="modal1" class="modal">
+          <div class="modal-content">
+            <h4 class='single-book-title'>Which Book Are You Trading?</h4>
+            <form action="/books/trade/<%= book.ownedBy %>/<%= book._id %>/<%= currentUser._id %>" method="post">
 
-            <select name="book" >
+              <select name="book">
 
               <option value="" disabled selected>Choose your option</option>
 
@@ -46,15 +46,17 @@
           <%  } %>
 
             </select>
-            <button type="submit" name="button" class='waves-effect waves-light btn red'>Trade</button>
-          </form>
+              <%  if(currentUser){  %>
+               <button type="submit" name="button" class='waves-effect waves-light btn red'>Trade</button>
+            <%  }   %>
+            </form>
 
+          </div>
         </div>
-      </div>
 
+      </div>
     </div>
   </div>
-</div>
 
 
-<% include partials/footer.ejs %>
+  <% include partials/footer.ejs %>

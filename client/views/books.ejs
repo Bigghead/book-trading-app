@@ -14,14 +14,11 @@
     <%  }  %>
 
       <div class="container">
-        <h2 class='center-align'>Book Collection</h2>
+        <h2 class='center-align' style="margin-bottom: 60px;">Book Collection</h2>
         <div class='row'>
           <% books.forEach(function(book){ %>
             <div class="col  l4 m6 s12 center-align books-container">
-              <!--<h5 class='limit'><%= book.bookName %></h5>-->
-              <a href="/books/<%= book._id %>">
-                <img class='book-image' src=<%= book.picture %> >                
-              </a>
+                <img class='book-image' src=<%= book.picture %> >     
               <% if(currentUser && book.ownedBy.toString() !== currentUser._id.toString()){ %>
                 <div>
                   <a class="waves-effect waves-light btn" href="/books/<%= book._id %>">Request A Trade</a>

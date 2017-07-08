@@ -20,7 +20,7 @@
             <tr>
               <th>Image</th>
               <th>Name</th>
-              <th>Description</th>
+              <th class='hide-on-small-only'>Description</th>
             </tr>
           </thead>
           <tbody>
@@ -28,7 +28,7 @@
             <tr class='blackText'>
               <td><img src=<%= book.picture %>></td>
               <td><%= book.bookName %></td>
-              <td><%= book.description.slice(0, 80) + '...' %></td>
+              <td class='hide-on-small-only'><%= book.description.slice(0, 80) + '...' %></td>
               <td>
                 <a href='/user/<%= foundUser._id %>/<%= book._id %>' class='btn-floating btn-large waves-effect waves-light red'>X</a>
               </td>

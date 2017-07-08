@@ -18,6 +18,9 @@ function isLoggedIn(req, res, next){
 router.post("/books/trade/:bookOwner/:theirBookid/:yourid", isLoggedIn, function(req, res){
   const done = false;
 
+  if(!req.body.book){
+    res.redirect('/books')
+  }
   Books.findById(req.body.book, function(err, tradingBook){
     if(err){
       console.log(err);

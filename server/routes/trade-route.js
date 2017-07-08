@@ -227,7 +227,7 @@ router.get('/cancel-trades/:bookID', isLoggedIn, ((req, res) => {
 
                 return User.findById(otherUserID).populate('peopleWantingToTrade').exec()
                         .then(otherUser => {
-                            console.log(otherUser);
+                          
                             const reqTrade = otherUser.peopleWantingToTrade;
                             reqTrade.forEach(requested => {
                                 if(requested.theirBookID.toString() === bookID){

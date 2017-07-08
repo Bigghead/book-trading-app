@@ -1,6 +1,5 @@
 <% include partials/header.ejs %>
 
-
 <div class="container center-align single-container">
   <div class="row center-align">
     <div class="col l4 s12">
@@ -29,22 +28,29 @@
 
               <option value="" disabled selected>Choose your option</option>
 
-          <% if(currentUser.booksOwned.length > 0) { %>
+          <!--<% if(currentUser.booksOwned.length > 0) { %>-->
             <%  if(currentUser.userTrade.length === 0){  %>
               <%  currentUser.booksOwned.forEach(function(book){  %>
                   <option value="<%= book._id %>" > <%= book.bookName %> </option>
                <%  }); %>
             <%  } else { %>
-                  <%  currentUser.booksOwned.forEach(function(book){  %>
-                    <%    currentUser.userTrade.forEach(function(trade){ %>
-                      <% if(trade.userBookID.toString() !== book._id.toString()){ %>
+
+                  <% var userTrades = [] ; %>
+
+                  <%  currentUser.userTrade.forEach(function(trade){  %>
+                   <% userTrades.push(trade.userBookID.toString()); %>
+                   <%  });  %>
+                   
+                     
+                    <%    currentUser.booksOwned.forEach(function(book){ %>
+                      <% if(userTrades.indexOf(book._id.toString()) === -1 ){ %>
                         <option value="<%= book._id %>" > <%= book.bookName %> </option>
                         <%  }  %>
                   <%  });  %>
-                  <%  });  %>
+                  
           <%  } %>
 
-          <% } %>
+          <!--<% } %>-->
 
             </select>
             <button type="submit" name="button" class='waves-effect waves-light btn red'>Trade</button>
@@ -56,6 +62,7 @@
     </div>
   </div>
 </div>
+
 
 
 <% include partials/footer.ejs %>

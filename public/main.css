@@ -30,6 +30,10 @@ body{
   margin: 10% auto !important;
 }
 
+.waves-effect{
+  margin-top: 15px;
+}
+
 .book-image{
   height: 300px;
 }

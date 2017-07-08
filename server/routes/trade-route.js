@@ -20,8 +20,9 @@ router.post("/books/trade/:bookOwner/:theirBookid/:yourid", isLoggedIn, function
 
   if(!req.body.book){
     res.redirect('/books')
-  }
-  Books.findById(req.body.book, function(err, tradingBook){
+  } else {
+
+     Books.findById(req.body.book, function(err, tradingBook){
     if(err){
       console.log(err);
     } else {
@@ -88,6 +89,9 @@ router.post("/books/trade/:bookOwner/:theirBookid/:yourid", isLoggedIn, function
          }); //second books.find
        }
     }); //first books.find
+
+  }
+ 
 });
 
 

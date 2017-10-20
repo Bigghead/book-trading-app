@@ -38,6 +38,10 @@ body{
   height: 300px;
 }
 
+.drag-target{
+  width: 0 !important;
+}
+
 .limit {
     overflow-x: scroll;
     white-space: nowrap;

@@ -67,74 +67,39 @@ router.get('/tradeRequest', isLoggedIn, function(req, res){
 
 
 // ==========IF THEY ACCEPT YOUR TRADE==================
-router.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', isLoggedIn, function(req, res){
+router.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', isLoggedIn, async(req, res) => {
 
-  const done = false;
-  RequestedTrade.findByIdAndRemove(req.params.tradeid, function(err, foundTrade){
-    if(err){
-      console.log(err);
-    } else {
+    const { tradeid, requestedBookId, askerBookId } = req.params;
+    try {
 
-      UserTrade.findByIdAndRemove(foundTrade.otherUserTradeID, function(err, foundUserTrade){
-        if(err){
-          console.log(err);
-        } else {
+        const foundTrade     = await RequestedTrade.findByIdAndRemove(tradeid);
+        const foundUserTrade = await UserTrade.findByIdAndRemove(foundTrade.otherUserTradeID);
+        const requestedUser  = await User.findById(req.user._id);
+        const foundUser      = await User.findById(foundTrade.theirID);
 
+        //take out requesting user's book, push the other user's book in
+        requestedUser.booksOwned.splice(requestedUser.booksOwned.indexOf(foundTrade.userBookID), 1);
+        requestedUser.booksOwned.push(foundTrade.theirBookID);
+        requestedUser.peopleWantingToTrade.splice(requestedUser.peopleWantingToTrade.indexOf(tradeid), 1);
+        await requestedUser.save();
 
-          User.findById(req.user._id, function(err, requestedUser){
-            if(err){
-              console.log(err);
-            } else {
+        //take out  user's book, push the requesting user's book in
+        foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(foundTrade.theirBookID), 1);
+        foundUser.booksOwned.push(foundTrade.userBookID);
+        foundUser.userTrade.splice(foundUser.userTrade.indexOf(foundTrade.otherUserTradeID), 1);
+        foundUser.save();
 
-              //take out requesting user's book, push the other user's book in
-              requestedUser.booksOwned.splice(requestedUser.booksOwned.indexOf(foundTrade.userBookID), 1);
-              requestedUser.booksOwned.push(foundTrade.theirBookID);
-              requestedUser.peopleWantingToTrade.splice(requestedUser.peopleWantingToTrade.indexOf(req.params.tradeid), 1);
-              requestedUser.save()
+        await Books.findByIdAndUpdate(requestedBookId,{
+            ownedBy : requestedUser._id
+        });
+        await Books.findByIdAndUpdate(askerBookId,{
+            ownedBy: foundUser._id
+        });
 
-              User.findById(foundTrade.theirID, function(err, foundUser){
-                if(err){
-                  console.log(err);
-                } else {
+        res.redirect('/books');
 
-                  //take out  user's book, push the requesting user's book in
-                  foundUser.booksOwned.splice(foundUser.booksOwned.indexOf(foundTrade.theirBookID), 1);
-                  foundUser.booksOwned.push(foundTrade.userBookID);
-                  foundUser.userTrade.splice(foundUser.userTrade.indexOf(foundTrade.otherUserTradeID), 1);
-                  foundUser.save();
-
-
-                  //NEED to clear this foundUser's userTrade, get rid of this trade, and re-push his book id back into his booksOwned
-
-                  return new Promise(function(resolve, reject){
-                  resolve(foundUser);
-                  })
-
-
-                  //Change the corresponding books' owners because we're hitting
-                  //a route that depends on the book's owner later. Want it to be
-                  //different every time, otherwise we're asking one user for a book they already own
-                  .then(function(){
-                    Books.findByIdAndUpdate(req.params.requestedBookId,{
-                      ownedBy : requestedUser._id
-                    }).exec()
-                      .then(function(){
-                        Books.findByIdAndUpdate(req.params.askerBookId,{
-                          ownedBy: foundUser._id
-                        }).exec()
-                        .then(function(){
-                            res.redirect('/books');
-                        });
-                      });
-                  });
-                }
-              });
-            }
-          });
-        }
-      });
-    }
-  });
+    } catch( e ) { throw new Error(e); }
+  
 });
 
 

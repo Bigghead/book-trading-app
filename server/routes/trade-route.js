@@ -104,29 +104,27 @@ router.get('/tradeRequest/:tradeid/:requestedBookId/:askerBookId', isLoggedIn, a
 
 
 // ==========IF THEY DENY YOUR TRADE==================
-router.get('/rejectTrade/:tradeid/:requestedBookId/:askerBookId', isLoggedIn, function(req, res){
-  RequestedTrade.findByIdAndRemove(req.params.tradeid, function(err, foundTrade){
-    if(err) console.log(err);
-    UserTrade.findByIdAndRemove(foundTrade.otherUserTradeID, function(err, foundUserTrade){
-      if(err) console.log(err);
-      //Logged In User
-      User.findById(req.user._id, function(err, requestedUser){
-        if(err) console.log(err);
-        requestedUser.peopleWantingToTrade.splice(requestedUser.peopleWantingToTrade.indexOf(req.params.tradeid), 1);
-        requestedUser.save();
+router.get('/rejectTrade/:tradeid/:requestedBookId/:askerBookId', isLoggedIn, async(req, res) => {
 
-        //Other User that is requesting for your book
-        User.findById(foundTrade.theirID, function(err, foundOtherUser){
-          if(err) console.log(err);
-          foundOtherUser.userTrade.splice(foundOtherUser.userTrade.indexOf(foundTrade.otherUserTradeID), 1);
-          foundOtherUser.save()
-            .then(function(){
-              res.redirect('/tradeRequest');
-            });
-        })
-      });
-    })
-  })
+    const { tradeid, requestedBookId, askerBookId } = req.params;
+
+    try {
+
+        const foundTrade     = await RequestedTrade.findByIdAndRemove(tradeid);
+        const foundUserTrade = await UserTrade.findByIdAndRemove(foundTrade.otherUserTradeID);
+        const requestedUser  = await User.findById(req.user._id);
+        const requestingUser = await User.findById(foundTrade.theirID);
+
+        requestedUser.peopleWantingToTrade.splice(requestedUser.peopleWantingToTrade.indexOf(tradeid), 1);
+        requestingUser.userTrade.splice(requestingUser.userTrade.indexOf(foundTrade.otherUserTradeID), 1);
+
+        await requestedUser.save();
+        await requestingUser.save();
+
+        res.redirect('/tradeRequest');
+
+    } catch(e) { throw new Error(e); }
+
 });
 
 
@@ -137,38 +135,38 @@ router.get('/user-trades', isLoggedIn, ((req, res) => {
   });
 }));
 
-router.get('/cancel-trades/:bookID', isLoggedIn, ((req, res) => {
-  const bookID = req.params.bookID;
-  User.findById(req.user._id).populate('userTrade')
-    .exec()
-    .then((user) => {
-        const userTrade = user.userTrade;
+
+router.get('/cancel-trades/:bookID', isLoggedIn, async(req, res) => {
+    const bookID = req.params.bookID;
+
+    try {
+
+        let otherUserID;
+        const user = await User.findById(req.user._id);
+        const { userTrade } = user;
         userTrade.forEach(trade => {
             if(trade.userBookID.toString() === bookID){
-                const otherUserID = trade.requestedUserID;
+                otherUserID = trade.requestedUserID;
                 userTrade.splice(userTrade.indexOf(trade), 1);
-                user.save()
-
-                return User.findById(otherUserID).populate('peopleWantingToTrade').exec()
-                        .then(otherUser => {
-                          
-                            const reqTrade = otherUser.peopleWantingToTrade;
-                            reqTrade.forEach(requested => {
-                                if(requested.theirBookID.toString() === bookID){
-                                    reqTrade.splice(reqTrade.indexOf(requested), 1);
-                                    otherUser.save()
-
-                                    .then(() => {
-                                        res.redirect('/books');
-                                    })
-                                }
-                            })
-                        });
             }
-        }); 
-    });
+        });
 
-}));
+        const otherUser = await User.findById(otherUserID);
+        const { peopleWantingToTrade: reqTrade } = otherUser;
+        reqTrade.forEach(requested => {
+            if(requested.theirBookID.toString() === bookID){
+                reqTrade.splice(reqTrade.indexOf(requested), 1);
+            }
+        });
+
+        await user.save();
+        await otherUser.save();
+
+        res.redirect('/books');
+
+    } catch(e) { throw new Error(e); }
+
+});
 
 
 module.exports = router;

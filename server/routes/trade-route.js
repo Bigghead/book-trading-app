@@ -15,83 +15,42 @@ function isLoggedIn(req, res, next){
 }
 
 //===============TRADE ROUTE======
-router.post("/books/trade/:bookOwner/:theirBookid/:yourid", isLoggedIn, function(req, res){
-  const done = false;
+router.post("/books/trade/:bookOwner/:theirBookid/:yourid", isLoggedIn, async (req, res) => {
 
-  if(!req.body.book){
-    res.redirect('/books')
-  } else {
+  if(!req.body.book) return res.redirect('/books');
 
-     Books.findById(req.body.book, function(err, tradingBook){
-    if(err){
-      console.log(err);
-    } else {
-      Books.findById(req.params.theirBookid, function(err, requestedBook){
-        if(err){
-          console.log(err);
-        } else {
+  try {
 
+    const tradingBook   = await Books.findById(req.body.book);
+    const requestedBook = await Books.findById(req.params.theirBookid);
+    const tradingUser   = await User.findById(req.params.yourid);
+    const requestedUser = await User.findById(req.params.bookOwner);
 
-          User.findById(req.params.yourid, function(err, tradingUser){
-            if(err){
-              console.log(err);
-            } else {
-              User.findById(req.params.bookOwner, function(err, requestedUser){
-                if(err){
-                  console.log(err);
-                } else {
+    const madeRequestedTrade = await RequestedTrade.create( {
+        theirID    : tradingUser._id,
+        theirBook  : tradingBook.bookName,
+        theirBookID: tradingBook._id,
+        userBook   : requestedBook.bookName,
+        userBookID : requestedBook._id
+    } );
+    const madeUserTrade = await UserTrade.create( {
+        userBook       : tradingBook.bookName,
+        userBookID     : tradingBook._id,
+        requestedBook  : requestedBook.bookName,
+        requestedBookID: requestedBook._id,
+        requestedUserID: requestedUser._id,
+        accepted       : false
+    } );
 
-                  //tradingUser.booksOwned.splice(tradingUser.booksOwned.indexOf(tradingBook._id), 1);
+    tradingUser.userTrade.push(madeUserTrade);
+    await tradingUser.save();
+    requestedUser.peopleWantingToTrade.push(madeRequestedTrade);
+    await requestedUser.save();
 
-                      RequestedTrade.create({
-                        theirID : tradingUser._id,
-                        theirBook: tradingBook.bookName,
-                        theirBookID: tradingBook._id,
-                        userBook : requestedBook.bookName,
-                        userBookID: requestedBook._id
+    res.redirect('/books');
 
-                      }, function(err, madeRequestedTrade){
-                        if(err){
-                          console.log(err);
-                        }  else {
+  } catch ( e ) { console.log(e); }
 
-                          UserTrade.create({
-                            userBook: tradingBook.bookName,
-                            userBookID: tradingBook._id,
-                            requestedBook: requestedBook.bookName,
-                            requestedBookID: requestedBook._id,
-                            requestedUserID: requestedUser._id,
-                            accepted: false
-
-                          }, function(err, madeUserTrade){
-                            if(err){
-                              console.log(err);
-                            } else {
-                              tradingUser.userTrade.push(madeUserTrade);
-                              tradingUser.save()
-                              .then(function(){
-                                  requestedUser.peopleWantingToTrade.push(madeRequestedTrade);
-                                  console.log(tradingUser);
-                                  requestedUser.save();
-                                })
-                              .then(function(){
-                                    res.redirect('/books');
-                                });
-                              }
-                            });  //end madeUserTrade
-                            }
-                          }); //end create
-                        }
-                    }); //end second user.find
-                  }
-              }); //end first user.find
-            }
-         }); //second books.find
-       }
-    }); //first books.find
-
-  }
- 
 });
 
 
